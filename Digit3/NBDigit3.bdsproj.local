@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2008/01/04 23:31:13.921.bdsproj,H:\_Programming\Emulation\TOOLSSRC\Digit3\NBDigit2.bdsproj=H:\_Programming\Emulation\TOOLSSRC\Digit3\NBDigit3.bdsproj</Transaction>
+    <Transaction>2008/01/04 23:33:07.593.pas,H:\_Programming\Emulation\TOOLSSRC\Digit3\Unit2.pas=H:\_Programming\Emulation\TOOLSSRC\Digit3\PulseDetEngine.pas</Transaction>
+    <Transaction>2008/01/05 23:30:17.906.pas,H:\_Programming\Emulation\TOOLSSRC\Digit3\Unit1.pas=H:\_Programming\Emulation\TOOLSSRC\Digit3\Sampling.pas</Transaction>
+    <Transaction>2008/01/17 15:02:13.390.pas,H:\_Programming\Emulation\TOOLSSRC\Digit3\Unit1.pas=H:\_Programming\Emulation\TOOLSSRC\Digit3\WavRecord.pas</Transaction>
+  </Transactions>
+</BorlandProject>

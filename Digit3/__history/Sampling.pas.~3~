@@ -1,0 +1,31 @@
+unit Sampling;
+
+interface
+uses Classes;
+
+Var
+  Sampling:Integer=22; //22KHz
+
+Function MaxSamples:Integer;
+Function HalfSamples:Integer;
+
+implementation
+
+Function MaxSamples:Integer;
+Begin
+  case Sampling  of
+    22:Result:=255;
+    44:Result:=65535;
+  end;
+end;
+
+Function HalfSamples:Integer;
+Begin
+  case Sampling  of
+    22:Result:=127;
+    44:Result:=32767;
+  end;
+end;
+
+
+end.

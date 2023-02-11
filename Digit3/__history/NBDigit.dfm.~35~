@@ -1,0 +1,750 @@
+object fnbdig: Tfnbdig
+  Left = -2
+  Top = 133
+  Caption = 'NB Digitizer 3.0'
+  ClientHeight = 554
+  ClientWidth = 1031
+  Color = clInfoBk
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnMouseWheel = FormMouseWheel
+  OnResize = FormResize
+  PixelsPerInch = 96
+  TextHeight = 13
+  object PaintBox1: TPaintBox
+    Left = 0
+    Top = 0
+    Width = 1031
+    Height = 328
+    Align = alClient
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    OnClick = PaintBox1Click
+    OnDblClick = PaintBox1DblClick
+    OnMouseDown = PaintBox1MouseDown
+    OnMouseMove = PaintBox1MouseMove
+    OnMouseUp = PaintBox1MouseUp
+    OnPaint = PaintBox1Paint
+    ExplicitLeft = -1
+    ExplicitTop = -6
+    ExplicitWidth = 1016
+    ExplicitHeight = 270
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 347
+    Width = 1031
+    Height = 19
+    Panels = <
+      item
+        Width = 200
+      end
+      item
+        Width = 300
+      end
+      item
+        Alignment = taCenter
+        Width = 400
+      end>
+  end
+  object ScrollBar1: TScrollBar
+    Left = 0
+    Top = 328
+    Width = 1031
+    Height = 19
+    Align = alBottom
+    PageSize = 0
+    TabOrder = 1
+    OnChange = ScrollBar1Change
+  end
+  object StepBar: TTrackBar
+    Left = 154
+    Top = 15
+    Width = 89
+    Height = 26
+    Max = 20
+    Min = 5
+    Position = 5
+    TabOrder = 2
+    Visible = False
+    OnChange = StepBarChange
+  end
+  object PanelDN: TPanel
+    Left = 0
+    Top = 366
+    Width = 1031
+    Height = 188
+    Align = alBottom
+    Caption = 'PanelDN'
+    TabOrder = 3
+    object Panel3: TPanel
+      Left = 220
+      Top = 1
+      Width = 810
+      Height = 186
+      Align = alRight
+      TabOrder = 0
+      object Panel4: TPanel
+        Left = 1
+        Top = 1
+        Width = 192
+        Height = 184
+        Align = alLeft
+        TabOrder = 0
+        object Label15: TLabel
+          Left = 53
+          Top = 2
+          Width = 101
+          Height = 20
+          Caption = 'DETECTION'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label14: TLabel
+          Left = 19
+          Top = 28
+          Width = 31
+          Height = 13
+          Caption = 'Pilots :'
+        end
+        object Label5: TLabel
+          Left = 92
+          Top = 26
+          Width = 6
+          Height = 13
+          Caption = '0'
+        end
+        object Label13: TLabel
+          Left = 19
+          Top = 47
+          Width = 47
+          Height = 13
+          Caption = 'Progress :'
+        end
+        object lblprc: TLabel
+          Left = 91
+          Top = 45
+          Width = 11
+          Height = 20
+          Caption = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label7: TLabel
+          Left = 19
+          Top = 82
+          Width = 47
+          Height = 13
+          Caption = 'Sensitivity'
+        end
+        object SpeedButton1: TSpeedButton
+          Left = 16
+          Top = 141
+          Width = 33
+          Height = 28
+          Hint = 'Start'
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Button8Click
+        end
+        object SpeedButton2: TSpeedButton
+          Left = 55
+          Top = 141
+          Width = 33
+          Height = 28
+          Hint = 'Stop'
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Button15Click
+        end
+        object SpeedButton3: TSpeedButton
+          Left = 94
+          Top = 141
+          Width = 33
+          Height = 28
+          Hint = 'Continue'
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = Button12Click
+        end
+        object Sens: TTrackBar
+          Left = 88
+          Top = 71
+          Width = 94
+          Height = 29
+          Max = 5
+          Min = 1
+          Position = 2
+          PositionToolTip = ptTop
+          TabOrder = 0
+          TickMarks = tmTopLeft
+        end
+        object CheckBox1: TCheckBox
+          Left = 19
+          Top = 118
+          Width = 97
+          Height = 17
+          Caption = 'Part detection'
+          TabOrder = 1
+          Visible = False
+        end
+      end
+      object PageControl1: TPageControl
+        Left = 193
+        Top = 1
+        Width = 616
+        Height = 184
+        ActivePage = TabSheet2
+        Align = alClient
+        TabOrder = 1
+        object TabSheet1: TTabSheet
+          Caption = 'Selection Tools'
+          object Bevel1: TBevel
+            Left = 10
+            Top = 5
+            Width = 359
+            Height = 55
+          end
+          object Label4: TLabel
+            Left = 26
+            Top = 8
+            Width = 64
+            Height = 13
+            Caption = 'Not Detected'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clRed
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label1: TLabel
+            Left = 205
+            Top = 19
+            Width = 23
+            Height = 13
+            Cursor = crHandPoint
+            Caption = 'From'
+            OnClick = Label1Click
+          end
+          object Label2: TLabel
+            Left = 302
+            Top = 19
+            Width = 33
+            Height = 13
+            Caption = 'Length'
+          end
+          object Bevel2: TBevel
+            Left = 9
+            Top = 66
+            Width = 360
+            Height = 57
+          end
+          object Button3: TButton
+            Left = 16
+            Top = 31
+            Width = 116
+            Height = 25
+            Hint = 'Try to Detect The selection'
+            Caption = 'Detect Selection'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 0
+            OnClick = Button3Click
+          end
+          object Button9: TButton
+            Left = 138
+            Top = 29
+            Width = 38
+            Height = 26
+            Hint = 'Next Selection Detect'
+            Caption = 'NXT'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 1
+            OnClick = Button9Click
+          end
+          object frmsampl: TEdit
+            Left = 182
+            Top = 33
+            Width = 80
+            Height = 21
+            Hint = 'Selection Start Sample'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            Text = '0'
+          end
+          object lenSampl: TEdit
+            Left = 273
+            Top = 33
+            Width = 94
+            Height = 21
+            Hint = 'Selection Length in Samples (Pilot 36, Bits 18)'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 3
+            Text = '18'
+          end
+          object Button14: TButton
+            Left = 26
+            Top = 85
+            Width = 88
+            Height = 21
+            Hint = 'Marks a byte Starting at the given sample'
+            Caption = 'Mark Byte From'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
+            OnClick = Button14Click
+          end
+          object Edit2: TEdit
+            Left = 115
+            Top = 85
+            Width = 54
+            Height = 21
+            TabOrder = 5
+            Text = '0'
+          end
+          object Button18: TButton
+            Left = 187
+            Top = 83
+            Width = 64
+            Height = 25
+            Hint = 'Mark Previous Byte'
+            Caption = '< Byte'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 6
+            OnClick = Button18Click
+          end
+          object Button19: TButton
+            Left = 254
+            Top = 83
+            Width = 66
+            Height = 25
+            Hint = 'Mark Next Byte'
+            Caption = 'Byte >'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 7
+            OnClick = Button19Click
+          end
+          object Button30: TButton
+            Left = 241
+            Top = 8
+            Width = 49
+            Height = 17
+            Caption = 'Fix Edge'
+            TabOrder = 8
+            Visible = False
+            OnClick = Button30Click
+          end
+          object CheckBox4: TCheckBox
+            Left = 104
+            Top = 8
+            Width = 97
+            Height = 17
+            Caption = 'Pilot Detect'
+            TabOrder = 9
+          end
+        end
+        object TabSheet2: TTabSheet
+          Caption = 'Patterns'
+          ImageIndex = 1
+          object ListBox3: TListBox
+            Left = 207
+            Top = 3
+            Width = 98
+            Height = 126
+            ItemHeight = 13
+            TabOrder = 0
+          end
+          object Button23: TButton
+            Left = 8
+            Top = 8
+            Width = 75
+            Height = 25
+            Hint = 'View Pilot Pattern'
+            Caption = 'Pilot'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 1
+            OnClick = Button23Click
+          end
+          object Button24: TButton
+            Left = 8
+            Top = 32
+            Width = 75
+            Height = 25
+            Hint = 'View One Pattern'
+            Caption = 'One'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            OnClick = Button24Click
+          end
+          object Button25: TButton
+            Left = 8
+            Top = 56
+            Width = 75
+            Height = 25
+            Hint = 'View Zero Pattern'
+            Caption = 'Zero'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 3
+            OnClick = Button25Click
+          end
+          object Button26: TButton
+            Left = 88
+            Top = 8
+            Width = 113
+            Height = 25
+            Hint = 'Set Pattern From Selection'
+            Caption = 'Set From Selection'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
+            OnClick = Button26Click
+          end
+          object Button27: TButton
+            Left = 88
+            Top = 32
+            Width = 113
+            Height = 25
+            Hint = 'Set Pattern From Selection'
+            Caption = 'Set From Selection'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 5
+            OnClick = Button27Click
+          end
+          object Button28: TButton
+            Left = 88
+            Top = 56
+            Width = 113
+            Height = 25
+            Hint = 'Set Pattern From Selection'
+            Caption = 'Set From Selection'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 6
+            OnClick = Button28Click
+          end
+          object Button29: TButton
+            Left = 48
+            Top = 101
+            Width = 75
+            Height = 25
+            Hint = 'Save Patterns to file'
+            Caption = 'Save Patterns'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 7
+            OnClick = Button29Click
+          end
+        end
+        object TabSheet3: TTabSheet
+          Caption = 'Parts'
+          ImageIndex = 2
+          object Label8: TLabel
+            Left = 175
+            Top = 9
+            Width = 53
+            Height = 13
+            Caption = 'No of Parts'
+          end
+          object Label9: TLabel
+            Left = 100
+            Top = 39
+            Width = 55
+            Height = 13
+            Caption = 'Part sample'
+          end
+          object Button22: TButton
+            Left = 3
+            Top = 3
+            Width = 85
+            Height = 25
+            Hint = 'Detect all Parts'
+            Caption = 'Detect all Parts'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 0
+            OnClick = Button22Click
+          end
+          object btn: TButton
+            Left = 94
+            Top = 3
+            Width = 75
+            Height = 25
+            Caption = 'Add Part'
+            TabOrder = 1
+            Visible = False
+            OnClick = btnClick
+          end
+          object Button20: TButton
+            Left = 3
+            Top = 34
+            Width = 85
+            Height = 25
+            Hint = 'Detect Selected Part Only'
+            Caption = 'Detect Part'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            OnClick = Button20Click
+          end
+          object Edit3: TEdit
+            Left = 235
+            Top = 7
+            Width = 46
+            Height = 21
+            Hint = 'Enter Adds or removes Parts'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 3
+            Text = '0'
+            OnKeyUp = Edit3KeyUp
+          end
+          object Edit4: TEdit
+            Left = 159
+            Top = 37
+            Width = 121
+            Height = 21
+            Hint = 'Enter Replace value'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
+            Text = '0'
+            OnKeyUp = Edit4KeyUp
+          end
+          object Panel1: TPanel
+            Left = 1
+            Top = 97
+            Width = 280
+            Height = 49
+            TabOrder = 5
+            object Label10: TLabel
+              Left = 96
+              Top = 16
+              Width = 6
+              Height = 13
+              Caption = '0'
+            end
+            object Label11: TLabel
+              Left = 144
+              Top = 16
+              Width = 6
+              Height = 13
+              Caption = '0'
+            end
+            object Label12: TLabel
+              Left = 192
+              Top = 16
+              Width = 6
+              Height = 13
+              Caption = '0'
+            end
+            object Button31: TButton
+              Left = 8
+              Top = 8
+              Width = 75
+              Height = 25
+              Hint = 'Works Only for the First detected part'
+              Caption = 'CHKSUM -- >'
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 0
+              OnClick = Button31Click
+            end
+          end
+          object ListBox2: TListBox
+            Left = 321
+            Top = 0
+            Width = 287
+            Height = 156
+            Align = alRight
+            ItemHeight = 13
+            TabOrder = 6
+            OnClick = ListBox2Click
+          end
+        end
+        object TabSheet4: TTabSheet
+          Caption = 'Bytes Detected'
+          ImageIndex = 3
+          object Button10: TButton
+            Left = 15
+            Top = 16
+            Width = 51
+            Height = 25
+            Hint = 'Previous Detected Byte'
+            Caption = '< Byte'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 0
+            OnClick = Button10Click
+          end
+          object Button13: TButton
+            Left = 69
+            Top = 16
+            Width = 102
+            Height = 25
+            Caption = 'Fix Selected Byte'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 1
+            OnClick = Button13Click
+          end
+          object Button11: TButton
+            Left = 174
+            Top = 16
+            Width = 53
+            Height = 25
+            Hint = 'Next Detected Byte'
+            Caption = 'Byte >'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            OnClick = Button11Click
+          end
+          object Button17: TButton
+            Left = 15
+            Top = 47
+            Width = 150
+            Height = 25
+            Hint = 'Delete ALL Bytes After Detected Byte No '
+            Caption = 'Delete Bytes After Byte No : '
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 3
+            OnClick = Button17Click
+          end
+          object Edit1: TEdit
+            Left = 171
+            Top = 47
+            Width = 54
+            Height = 21
+            TabOrder = 4
+            Text = '0'
+          end
+        end
+        object TabSheet5: TTabSheet
+          Caption = 'Record Tape'
+          ImageIndex = 4
+          object SpeedButton4: TSpeedButton
+            Left = 32
+            Top = 40
+            Width = 73
+            Height = 22
+            AllowAllUp = True
+            GroupIndex = 1
+            Caption = 'Start Record'
+            OnClick = SpeedButton4Click
+          end
+        end
+      end
+    end
+    object ListBox1: TListBox
+      Left = 1
+      Top = 1
+      Width = 219
+      Height = 186
+      Hint = 'Double click to position'
+      Align = alClient
+      ItemHeight = 13
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+      OnDblClick = ListBox1DblClick
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'WAV|*.wav'
+    Title = 'Open Wav File'
+    Left = 47
+    Top = 10
+  end
+  object MainMenu1: TMainMenu
+    Left = 88
+    Top = 24
+    object File1: TMenuItem
+      Caption = 'File'
+      object Open1: TMenuItem
+        Caption = 'Open'
+        OnClick = Button1Click
+      end
+      object Save1: TMenuItem
+        Caption = 'Save'
+        OnClick = Button16Click
+      end
+      object SaveByPart1: TMenuItem
+        Caption = 'Save By Part'
+        OnClick = SaveByPart1Click
+      end
+      object SavePartList1: TMenuItem
+        Caption = 'Save Part List'
+        Hint = 'Saves the list of Pilot starts for every Part '
+        OnClick = Button21Click
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object Exit1: TMenuItem
+        Caption = 'Exit'
+        OnClick = Exit1Click
+      end
+    end
+    object View1: TMenuItem
+      Caption = 'View'
+      object FilteredSamples1: TMenuItem
+        Caption = 'Filtered Samples'
+        OnClick = FilteredSamples1Click
+      end
+      object RePaint1: TMenuItem
+        Caption = 'RePaint'
+        OnClick = RePaint1Click
+      end
+    end
+    object Detection1: TMenuItem
+      Caption = 'Detection'
+      object StartDetection1: TMenuItem
+        Caption = 'Start'
+        OnClick = Button8Click
+      end
+      object Stop1: TMenuItem
+        Caption = 'Stop'
+        OnClick = Button15Click
+      end
+      object Continue1: TMenuItem
+        Caption = 'Continue'
+        OnClick = Button12Click
+      end
+    end
+  end
+end

@@ -1,0 +1,11 @@
+unit Sampling;
+
+interface
+uses Classes;
+
+Var
+  Sampling:Integer=22; //22KHz
+
+implementation
+
+end.
