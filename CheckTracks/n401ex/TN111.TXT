@@ -1,0 +1,175 @@
+   Centronics Printer Driver TN111
+
+ General Description
+
+The  NewBrain expansion interface module and peripheral
+interface  module    are    both   fitted   with  9-bit
+parallel  output  ports. The Centronics  driver  allows
+these  ports   to   be configured  to   the  Centronics
+standard protocol.
+
+Communications    between   driver and program  is  via
+five standard IOS commands:
+
+ OPEN
+
+Parameters   supplied   on  open    are   as   follows:
+
+1 Device Number
+
+The  device  number  of the Centronics  driver  is  21.
+
+2 Port Number
+
+No   use   of  this is made by   the  device.  It  can,
+however,  be  used  to create multiple  copies  of  the
+device  (eg   one printer on  the  Expansion  Interface
+Module  and  up to four others on Peripheral  Interface
+Modules [up  to  four can be attached]).
+
+3 Parameter String
+
+The   parameter string must  have the  following  form:
+
+parameter-string  ::=  [enviroment-  option]*
+
+environment-option ::= printer-number or line-
+        length or buffer-size
+
+printer-number ::= C (0|1|2|3|4)
+
+line-length    ::= L integer
+
+buffer-size    ::= * integer
+
+integer        ::= 0..255
+
+Any    spaces  occuring  in   the parameter string  are
+ignored.
+
+ Printer Number
+
+Printer   Number  0  is the printer  connected  to  the
+expansion interface module.
+
+Printers numbered 1 to 4 are the printers connected  to
+peripheral modules 1 to 4 respectively.
+
+If  a printer number outside this range is given in the
+parameter string, error 195 is returned.
+
+ Line Length
+
+If  the line length is  non-zero, a new line  (0AH/0DH)
+is   output  after  the  specified  number  of  printed
+characters.  Tab  characters  (09H)  are  replaced   by
+sufficient  spaces to bring  the print head position to
+a  multiple   of   eight    characters  from  the  left
+margin.
+
+If   a   line  length of  zero  is requested, then  the
+data appears on the printer port exactly as it is  sent
+to  the  driver,   with no inserted line feeds  or  tab
+expansion.
+
+ Buffer Size
+
+The    buffer   size   parameter specifies the  printer
+buffer  capacity   as  a multiple of  256 bytes.  If  a
+buffer size of  zero is requested, the printer will run
+in direct (i.e. non-interrupt driven) mode. If there is
+insufficient  memory  to  allocate  a  buffer  of   the
+required  size, then the  buffer manager returns  error
+120.
+
+ Operational Notes
+
+When   an attempt is made to open a Centronics  stream,
+the  driver sends a series of null characters (00H)  to
+the  printer  and  waits for a response.  If,  for  any
+reason,  there   is   no reply (power  off,  cable  not
+connected,  etc.), then STOP must be pressed to  regain
+keyboard  control.   [This  obviously  also applies  if
+you attempt to  enter CP/M that has been configured  to
+expect a Centronics Printer.]
+
+ Defaults
+
+The  default  parameter  string  for  expansion  module
+operation is:
+
+"C0*1L255"
+
+For  a  system  without an expansion  interface  module
+(i.e.  fitted  with  a  single    Peripheral  Interface
+Module)  the    printer  can  only  be  run  in  direct
+(unbuffered)  mode    and    the  Peripheral  Interface
+Module  is assumed to be number 1. As a result, only  a
+line  length specification may appear in the  parameter
+string, the  default being:
+
+"L255"
+
+If   a   printer number or  buffer size  is  explicitly
+specified error 110 will be returned.
+
+ INPUT
+
+Since   the  printer  is an  output  only  device,  any
+attempt  to  read from it will result in an  error  109
+(System Error).
+
+ OUTPUT
+
+When   a   byte is output  to  the printer, the  8  bit
+data  pattern  is  set up on the port  at  least  eight
+microseconds  before   the falling edge of  the  strobe
+pulse.  This    minimum   figure applies to the  direct
+(un-buffered) mode of operation. THe set-up time for  a
+buffered  printer   is substantially longer than  this.
+The  duration of  the strobe pulse is guaranteed to  be
+at least five microseconds.
+
+ CLOSE
+
+If  an  attempt  is made to close  a  buffered  printer
+before  the  buffer is empty, then  the  close  routine
+waits  until  the  printer is able to receive  all  the
+remaining   data  before    deleting  the  buffer   and
+returning  control to the user program. It is  possible
+to  abandon this printing by pressing STOP.  This  will
+cause the remainder of the contents of the buffer to be
+discarded.
+
+ Summary of Errors
+
+The   Centronics device driver is liable to return  the
+following errors:
+
+Error 109 Attempt was made to read from printer.
+
+Error  110  Syntax error in  parameter  string.
+
+Error  120  Insufficient  memory  to  allocate  buffer.
+
+
+Error  195  Printer   number    out  of  range.
+
+ BUGs!
+
+If  a buffered stream is  opened under BASIC it may not
+be  possible to to boot CP/M from the  Expansion  Paged
+System   Main  Menu  (although  the  disk  drives   are
+accessed).
+
+The   associated  buffer  is  not deleted if  the  user
+presses  STOP  to  abort the transfer of  data  in  the
+buffer at CLOSE time out  to the printer. As a result a
+new stream can not be opened to that device and printer
+number.  A second close, does in fact clear the buffer.
+
+The user may have to switch  off at the mains. This  is
+not serious, only annoying.
+
+WFKN 050783,  GFG 170585
+

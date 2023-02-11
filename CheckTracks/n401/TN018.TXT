@@ -1,0 +1,111 @@
+Technical Note 18 Issue 1
+
+P.McGrane 120583
+
+
+Production   of   User   Defined Characters
+
+(Non-paged NewBrains)
+
+This  method will allow the production of user  defined
+characters  in the high resolution graphics area of the
+screen.  (Note  the  term  "high  resolution  graphics"
+includes  the  40 column screen,  which  many  NewBrain
+users  refer to Low resolution. Normally LO-RES  refers
+to block graphics character.)
+
+1. Layout of the Character ROM.
+
+Each  character  occupies a 8 x 10 bit pattern  on  the
+screen. This is compressed into an 8 x 8 pattern in the
+ROM.
+
+Characters  are represented by 8 sets of 256 bytes. The
+lowest  byte representing the top row of  character  0,
+the next, the top row of character 1, etc.. Bit 0 has a
+special meaning in each case and may not be used except
+as  described  below. The character is  represented  by
+bits 1 to 7.
+
+
+Character are decoded as follows:
+
+Characters 0-31 and characters 128-159: rows 7, 8 and 9
+are identical. The system generates 8 and 9 by  copying
+row 7.
+
+Other  characters: rows 2-7 are represented as  stored.
+Bit 0 of rows 0 and 1 are inspected. If bit 0 is 0  the
+row  is  plotted as stored. In such a case  the  stored
+position is left blank. Note that setting bit 0 of  row
+1  to  1  and  bit  0  of  row  0  to  0  will  produce
+discontinuous   character.  Bit  0  is  not  displayed.
+
+
+Examples
+
+Row Displayed  Stored   Dec.
+
+0   -xxxxxx-  01111110  126
+1   -x----x-  01000010   66
+2   -x----x-  01000010   66
+3   -x----x-  01000010   66
+4   -xxxxxx-  01111110  126
+5   --------  00000000    0
+6   --------  00000000    0
+7   --------  00000000    0
+8   --------
+9   --------
+
+0   --------  01000011   67*
+1   --------  01111111  127*
+2   --------  00000000    0
+3   --------  00000000    0
+4   --------  00000000    0
+5   -xxxxxx-  01111110  126
+6   -x----x-  01000010   66
+7   -x----x-  01000010   66
+8   -x----x-
+9   -xxxxxx-
+
+
+*  These lines are displayed as 8 and  9  respectively.
+
+
+2. User Defined Characters.
+
+Bytes   77H  and 78H (119  &  120) hold the address  of
+the  the  first  byte  of  the  default  character  set
+(character  set  2).  To  find  the  address  use   the
+following:
+
+a=PEEK(119)+256*PEEK(120)
+
+The   character  set  occupies  256 x 8  (2048)  bytes.
+
+If  the user wishes to define  a totally new  character
+set he should reserve 2048 bytes and change the address
+at  77H  and 78H to point to the lowest address of this
+block   (TOP).  Values  may  then  be  POKEd  into  the
+reserved area to produce the desired characters. If the
+user  wishes to change_some_characters only it is  best
+to  copy   the default character set from ROM into  the
+reserved  area and then to change only those which  are
+required.
+
+The   following program will copy the default character
+set and change the page zero pointer.
+
+10 RESERVE 2028:a=TOP:b=PEEK(119)+256*PEEK(120)
+20 FOR l=1 TO 2048
+30 z=PEEK(b+i-1): POKE a+i,z
+40 NEXT i
+50 c=INT(a+1)/256:d=a+2-(c*256)
+60 POKE 119,d :POKE 120,c
+70 END
+
+In     high  resolution  graphics  the  character   set
+addressed  will  now  be the copy in RAM. This  may  be
+changed by the user as required.
+
+

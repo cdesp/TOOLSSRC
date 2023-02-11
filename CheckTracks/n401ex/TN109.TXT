@@ -1,0 +1,123 @@
+BASIC extensions with peripherals TN109
+
+1) Expansion box
+
+1.1) Memory
+
+When  running  BASIC  under  the paged memory operating
+system  the storage available for programs and data  is
+40K.  This  is  not  affected  by  the  amount  of  I/O
+facilities used. This  means that a large screen (up to
+80 by 255) or a large high resolution graphics area, or
+the   DISCIO  system can be used without affecting  the
+40K available  to the user. This will be between  2000H
+and  BFFFH. Space may  be RESERVEd as before at the top
+of  the   area  which can be  used   for  machine  code
+routines as before. Such routines can make system calls
+as   described   in   the systems documentation without
+pre- or  postamble.  The  pages will always be  present
+so  that PEEK, POKE and CALL can be used as before.  In
+addition the system page will always be present between
+0 and 1FFFH  and can be PEEKed and POKEd.
+
+1.2) SAVF
+
+A   new  command SAVF is available (syntax the  is  the
+same  as  SAVE). This will save the current program  in
+such a  way that it will LOAD or MERGE faster. Programs
+saved    using  SAVF will not  VERIFY.  Programs  saved
+using  SAVF  can  be  LOADed by any BASIC. It  will  be
+found that the speed increase obtained will be  greater
+the larger  the program is.
+
+1.3) EXIT
+
+A   new  command EXIT will cause a return to  the  main
+system  menu.  The current program and data  are  lost.
+
+
+1.4) EXT[ERNAL]
+
+A   new  command  EXTERNAL   and functions EXTERNAL and
+EXTERNAL$ (EXT is a synonym for EXTERNAL)   exist. This
+facility    allows access to subroutines and  functions
+that are in add-on ROM librarys. The keyword is  always
+ followed   by   the   name     of   the  routine.  Any
+parameters should be enclosed in brackets and separated
+by  commas.  EXTERNAL routines are unusual in that  the
+parameters  may be used to return results. In this case
+the parameters must be variables. It is not possible to
+use a function with a string result parameter in a  DEF
+statement.
+
+Examples:
+
+EXTERNAL shoot
+
+EXT sound(x,y,z)
+
+EXTERNAL      complexadd     (a(1),a(2),     b(1),b(2))
+
+PRINT  EXT  e,  EXTERNAL parity(x)  ,  EXT$  spaces(20)
+
+EXT exchange(a$,b$,c$)
+
+The   following   new  error  numbers  may  be   given:
+
+58)  Use  of  an EXTERNAL  subroutine  as  a  function.
+
+59)  Use  of  an  EXTERNAL function  as  a  subroutine.
+
+60)  The name of the requested EXTERNAL routine  cannot
+be found in the attached library modules.
+
+61) The EXTERNAL function being used delivers the wrong
+type of result.
+
+62)  Attempt  to  use a function with a  string  result
+parameter within a DEF statement.
+
+64) The type of parameter is wrong.
+
+2) Disc controller
+
+When   the  disc controller on its  own  is  connected,
+BASIC  works  exactly as it does in a NewBrain  on  its
+ own.  There  are  two additional commands, SAVF  which
+is  as  described  above, and   CPM  which  immediately
+enters the 32K CP/M system, losing the current  program
+and data.
+
+When    the   disc   controller    is  connected  to  a
+NewBrain  with  an expansion box no  further  extension
+than  is   described above occurs (the CPM command does
+not exist). To enter  CP/M use EXIT and then enter CP/M
+from   the  paged  system  menu.
+
+When   the   disc   controller   is  connected  to  the
+system, with or without an expansion box, devices 12-15
+become     available  (see  DISCIO  documentation).  In
+addition  commands  like   LOAD "PROGRAM" will use  the
+disc  system   (device 12) to load  the program  rather
+than  the cassette port. In this case the name  of  the
+program  will  not  be displayed while  loading  and  a
+filename  must be given  (simply saying LOAD  will  not
+do).
+
+To  load  or save programs  from cassette, device 1 has
+to   opened   explicitly.  E.g.  to  load  a   program:
+
+OPENIN#1,1,"PROGRAM"
+LOAD#1
+CLOSE#1
+
+And to save a program:
+
+OPENOUT#1,1,"PROGRAM"
+SAVE#1:REM Could use SAVF here!
+CLOSE#1
+
+CSP 180483
+
+
+

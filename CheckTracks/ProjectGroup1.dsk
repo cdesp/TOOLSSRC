@@ -1,0 +1,732 @@
+[Closed Files]
+File_0=SourceModule,'c:\program files\borland\delphi5\Components\DirectX\DelphiX2000\Source\DXDraws.pas',0,1,4303,1,4312,0,0
+File_1=SourceModule,'C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\frmChrDsgn.pas',0,1,1,1,1,0,0
+File_2=SourceModule,'c:\program files\borland\delphi5\Source\Vcl\Controls.pas',0,1,5851,32,5855,0,0
+File_3=SourceModule,'C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\DecodeCS\decCs.pas',0,1,24,14,53,1,0
+File_4=SourceModule,'C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBTapes.pas',0,1,34,32,35,0,0
+File_5=SourceModule,'C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\frmAbout.pas',0,1,4,13,14,1,0
+File_6=SourceModule,'C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\Framepaint.pas',0,1,173,1,175,0,0
+
+[Modules]
+Module0=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBCop.pas
+Module1=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\New.pas
+Module2=c:\program files\borland\delphi5\Source\Vcl\Classes.pas
+Module3=c:\program files\borland\delphi5\source\rtl\Sys\system.pas
+Module4=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBKeyboard.pas
+Module5=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\CheckTracks\ct.pas
+Module6=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\raze.pas
+Module7=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\NewBrain.dpr
+Module8=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBMemory.pas
+Module9=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBStream.pas
+Module10=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uz80dsm.pas
+Module11=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\frmNewDebug.pas
+Module12=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBScreen.pas
+Module13=c:\program files\borland\delphi5\Source\Vcl\forms.pas
+Module14=c:\program files\borland\delphi5\Source\Vcl\graphics.pas
+Module15=c:\program files\borland\delphi5\source\rtl\Sys\GETMEM.INC
+Module16=c:\program files\borland\delphi5\source\rtl\Sys\sysutils.pas
+Module17=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBTypes.pas
+Module18=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\ustrings.pas
+Module19=c:\program files\borland\delphi5\Source\Vcl\stdctrls.pas
+Count=20
+EditWindowCount=1
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBCop.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\New.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[c:\program files\borland\delphi5\Source\Vcl\Classes.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files\borland\delphi5\source\rtl\Sys\system.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBKeyboard.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\CheckTracks\ct.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=1
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\raze.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\NewBrain.dpr]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBMemory.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBStream.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uz80dsm.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\frmNewDebug.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBScreen.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files\borland\delphi5\Source\Vcl\forms.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files\borland\delphi5\Source\Vcl\graphics.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files\borland\delphi5\source\rtl\Sys\GETMEM.INC]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files\borland\delphi5\source\rtl\Sys\sysutils.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBTypes.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\ustrings.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files\borland\delphi5\Source\Vcl\stdctrls.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\CheckTracks\ProjectGroup1.bpg]
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\CheckTracks\CheckTracks.dpr]
+FormState=0
+FormOnTop=0
+
+[EditWindow0]
+ViewCount=20
+CurrentView=7
+View0=0
+View1=1
+View2=2
+View3=3
+View4=4
+View5=5
+View6=6
+View7=7
+View8=8
+View9=9
+View10=10
+View11=11
+View12=12
+View13=13
+View14=14
+View15=15
+View16=16
+View17=17
+View18=18
+View19=19
+CodeExplorer=CodeExplorer@EditWindow0
+MessageView=MessageView@EditWindow0
+Create=1
+Visible=1
+State=0
+Left=277
+Top=9
+Width=753
+Height=715
+MaxLeft=-4
+MaxTop=121
+ClientWidth=745
+ClientHeight=677
+LeftPanelSize=211
+LeftPanelClients=CodeExplorer@EditWindow0,MIDEXForm
+LeftPanelData=00000400010000000C000000436F64654578706C6F7265720000000000000000000000000000000000010000000000000000090000004D49444558466F726DFFFFFFFF
+RightPanelSize=0
+BottomPanelSize=113
+BottomPanelClients=BreakpointWindow,DockSite0,MessageView@EditWindow0
+BottomPanelData=000004000100000008000000425057696E646F77E90200000000000002710000000000000001000000007401000009000000446F636B53697465300100000000E90200000B0000004D65737361676556696577FFFFFFFF
+
+[View0]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\NewBrain.dpr
+CursorX=31
+CursorY=31
+TopLine=22
+LeftCol=1
+
+[View1]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\New.pas
+CursorX=32
+CursorY=1264
+TopLine=1259
+LeftCol=1
+
+[View2]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\CheckTracks\ct.pas
+CursorX=1
+CursorY=795
+TopLine=793
+LeftCol=1
+
+[View3]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\raze.pas
+CursorX=24
+CursorY=32
+TopLine=16
+LeftCol=1
+
+[View4]
+Module=c:\program files\borland\delphi5\Source\Vcl\stdctrls.pas
+CursorX=17
+CursorY=3942
+TopLine=3931
+LeftCol=1
+
+[View5]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBKeyboard.pas
+CursorX=10
+CursorY=48
+TopLine=186
+LeftCol=1
+
+[View6]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBTypes.pas
+CursorX=11
+CursorY=45
+TopLine=41
+LeftCol=1
+
+[View7]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBCop.pas
+CursorX=1
+CursorY=1253
+TopLine=1250
+LeftCol=1
+
+[View8]
+Module=c:\program files\borland\delphi5\Source\Vcl\Classes.pas
+CursorX=18
+CursorY=3704
+TopLine=3691
+LeftCol=1
+
+[View9]
+Module=c:\program files\borland\delphi5\source\rtl\Sys\system.pas
+CursorX=44
+CursorY=4696
+TopLine=4682
+LeftCol=1
+
+[View10]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\ustrings.pas
+CursorX=1
+CursorY=398
+TopLine=402
+LeftCol=1
+
+[View11]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBMemory.pas
+CursorX=14
+CursorY=147
+TopLine=134
+LeftCol=1
+
+[View12]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBScreen.pas
+CursorX=12
+CursorY=840
+TopLine=832
+LeftCol=1
+
+[View13]
+Module=c:\program files\borland\delphi5\Source\Vcl\graphics.pas
+CursorX=1
+CursorY=2206
+TopLine=2198
+LeftCol=1
+
+[View14]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uz80dsm.pas
+CursorX=15
+CursorY=85
+TopLine=69
+LeftCol=1
+
+[View15]
+Module=c:\program files\borland\delphi5\source\rtl\Sys\GETMEM.INC
+CursorX=1
+CursorY=1026
+TopLine=1018
+LeftCol=1
+
+[View16]
+Module=c:\program files\borland\delphi5\source\rtl\Sys\sysutils.pas
+CursorX=1
+CursorY=2724
+TopLine=2717
+LeftCol=1
+
+[View17]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\uNBStream.pas
+CursorX=13
+CursorY=285
+TopLine=273
+LeftCol=1
+
+[View18]
+Module=c:\program files\borland\delphi5\Source\Vcl\forms.pas
+CursorX=1
+CursorY=6732
+TopLine=6722
+LeftCol=1
+
+[View19]
+Module=C:\Program Files\Borland\Delphi5\Projects\EMUL\EMUL\RAIZE\Delphi\frmNewDebug.pas
+CursorX=1
+CursorY=43
+TopLine=43
+LeftCol=1
+
+[Watches]
+Count=10
+Watch0='Length(ext)',256,0,18,1,1
+Watch1='PageOffset',256,0,18,1,1
+Watch2='NbMem.Rom[i+1]',256,0,18,1,0
+Watch3='strtoint(sl[t])',256,0,18,1,1
+Watch4='PageOffset',256,0,18,1,1
+Watch5='NBMem.NBPages[Pageno]^.Memory[PageOffset.W+5]',256,0,18,1,1
+Watch6='ramadd',256,0,18,1,0
+Watch7='DeviceNo',256,0,18,1,1
+Watch8='VideoPos',256,0,18,1,1
+Watch9='Vno',256,0,18,1,0
+
+[Breakpoints]
+Count=0
+
+[AddressBreakpoints]
+Count=0
+
+[Main Window]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=-2
+Width=1024
+Height=125
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=1016
+ClientHeight=87
+
+[ProjectManager]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=245
+Height=575
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=245
+ClientHeight=575
+TBDockHeight=305
+LRDockWidth=438
+Dockable=1
+
+[CPUWindow]
+Create=1
+Visible=0
+State=0
+Left=170
+Top=165
+Width=739
+Height=542
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=731
+ClientHeight=504
+DumpPane=79
+DisassemblyPane=264
+RegisterPane=231
+FlagPane=64
+
+[AlignmentPalette]
+Create=1
+Visible=0
+State=0
+Left=200
+Top=141
+Width=156
+Height=86
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=150
+ClientHeight=60
+
+[PropertyInspector]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=245
+Height=575
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=243
+ClientHeight=573
+TBDockHeight=494
+LRDockWidth=190
+Dockable=1
+SplitPos=139
+ArrangeBy=Name
+SelectedItem=OnCloseQuery
+ExpandedItems=Completion,DataController,DataController.Filter,Display,Font.Style,LookAndFeel,MidasProperties,MidasProperties.DCOM,MidasProperties.Socket,Options,Properties
+HiddenCategories=Legacy
+ShowStatusBar=1
+
+[WatchWindow]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=348
+Height=84
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=348
+ClientHeight=84
+TBDockHeight=176
+LRDockWidth=421
+Dockable=1
+
+[BreakpointWindow]
+Create=1
+Visible=0
+State=0
+Left=12
+Top=0
+Width=758
+Height=65
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=758
+ClientHeight=65
+TBDockHeight=65
+LRDockWidth=737
+Dockable=1
+Column0Width=100
+Column1Width=75
+Column2Width=200
+Column3Width=200
+Column4Width=75
+Column5Width=75
+
+[CallStackWindow]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=348
+Height=84
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=348
+ClientHeight=84
+TBDockHeight=161
+LRDockWidth=294
+Dockable=1
+
+[ThreadStatusWindow]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=348
+Height=84
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=348
+ClientHeight=84
+TBDockHeight=101
+LRDockWidth=645
+Dockable=1
+Column0Width=241
+Column1Width=100
+Column2Width=115
+Column3Width=250
+
+[ModuleWindow]
+Create=1
+Visible=0
+State=0
+Left=162
+Top=351
+Width=788
+Height=139
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=780
+ClientHeight=111
+TBDockHeight=355
+LRDockWidth=638
+Dockable=1
+Column0Width=125
+Column1Width=100
+Column2Width=155
+EntryPointPane=441
+CompUnitPane=31
+
+[DebugLogView]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=348
+Height=84
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=348
+ClientHeight=84
+TBDockHeight=291
+LRDockWidth=417
+Dockable=1
+
+[LocalVarsWindow]
+Create=1
+Visible=0
+State=0
+Left=231
+Top=706
+Width=365
+Height=250
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=357
+ClientHeight=222
+TBDockHeight=192
+LRDockWidth=421
+Dockable=1
+
+[ToDo List]
+Create=1
+Visible=0
+State=0
+Left=256
+Top=593
+Width=801
+Height=276
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=793
+ClientHeight=248
+TBDockHeight=250
+LRDockWidth=470
+Dockable=1
+Column0Width=200
+Column1Width=30
+Column2Width=100
+Column3Width=70
+Column4Width=70
+SortOrder=4
+ShowHints=1
+ShowChecked=1
+
+[FPUWindow]
+Create=1
+Visible=0
+State=0
+Left=352
+Top=257
+Width=457
+Height=250
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=449
+ClientHeight=212
+FOOO=121
+FlagPane=59
+
+[fmGrepResults]
+Create=1
+Visible=0
+State=0
+Left=254
+Top=152
+Width=515
+Height=441
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=507
+ClientHeight=413
+TBDockHeight=441
+LRDockWidth=515
+Dockable=1
+
+[fmToDo]
+Create=1
+Visible=0
+State=0
+Left=282
+Top=198
+Width=555
+Height=337
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=547
+ClientHeight=309
+TBDockHeight=337
+LRDockWidth=555
+Dockable=1
+
+[fmProjOptionSets]
+Create=1
+Visible=0
+State=0
+Left=282
+Top=205
+Width=459
+Height=357
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=451
+ClientHeight=329
+TBDockHeight=357
+LRDockWidth=459
+Dockable=1
+
+[MIDEXForm]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=12
+Width=211
+Height=530
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=211
+ClientHeight=530
+TBDockHeight=359
+LRDockWidth=211
+Dockable=1
+Layout=0
+Split=127
+
+[CodeExplorer@EditWindow0]
+Create=1
+Visible=0
+State=0
+Left=-92
+Top=-8
+Width=140
+Height=305
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=140
+ClientHeight=305
+TBDockHeight=305
+LRDockWidth=140
+Dockable=1
+
+[MessageView@EditWindow0]
+Create=1
+Visible=1
+State=0
+Left=384
+Top=0
+Width=361
+Height=113
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=361
+ClientHeight=113
+TBDockHeight=113
+LRDockWidth=443
+Dockable=1
+
+[DockHosts]
+DockHostCount=2
+
+[DockSite0]
+DockSiteType=1
+Create=1
+Visible=1
+State=0
+Left=12
+Top=0
+Width=356
+Height=113
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=356
+ClientHeight=113
+TBDockHeight=113
+LRDockWidth=283
+Dockable=1
+TabPosition=0
+ActiveTab=Watch List - Thread $B74
+TabDockClients=WatchWindow,CallStackWindow,DebugLogView,ThreadStatusWindow
+
+[DockSite1]
+DockSiteType=1
+Create=1
+Visible=1
+State=0
+Left=-1
+Top=125
+Width=280
+Height=613
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=272
+ClientHeight=585
+TBDockHeight=494
+LRDockWidth=261
+Dockable=1
+TabPosition=2
+ActiveTab=Object Inspector
+TabDockClients=PropertyInspector,ProjectManager
+

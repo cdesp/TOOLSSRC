@@ -1,0 +1,52 @@
+   ANALOG DEVICE DRIVER TN114
+
+M. Rousselle, NB477 APIO 22: device 22.
+
+The  APIO  device  driver  is   meant  for  measurement
+control of physical quantities external to NewBrain, by
+directing  output  to  a DAC or routing  input  from  a
+multiplexed  8-channel  ADC.    The  driver  uses   Z80
+hardware  ports 5 (DAC) and 16 to 19 (only four for the
+ADC).
+
+On    OPEN   or  CLOSE,  the  only action taken  is  to
+clear   A     and  reg.  pair  BC   before   returning.
+
+OUTPUT   to DAC  merely  reverses the bit-order of  the
+byte  in   A (D7 becomes D0 and so on)  before  putting
+this byte on  the  Z80 hardware port 5.
+
+INPUT   -  channels 4 to 7  (ADC) and sound (!)  output
+are enabled, unless a  portparameter > 3, in which case
+the  first   4 channels (0-3) are selected  (these  are
+used internally).
+
+-  next, the port  parameter  is decided upon (must  be
+in  range 0-3), and the next appropriate hardware  port
+16 to  19    is chosen for input.
+
+-    conversion  of  the   analog sample is started  by
+sending a NULL control word, and some time is wasted by
+a  delay   in  the source code (conversion time  of  50
+nano  secs,  as stated by GBS,  seems  very  unlikely);
+after  that  delay  a byte is read in from  the  chosen
+channel.
+
+REM:
+
+-    the  APIO  device    driver    does  not   disable
+interrupts;  as  a consequence samples of fast-changing
+voltages,   i.e.   audio  signals,  are   easily   lost
+
+-  for crucial measurements, even refreshing the screen
+should   be   avoided  by   disabling   bus   requests:
+
+PUT#7,1         to   disable   PUT#7,0   to   re-enable
+
+of    course,  after  opening  device  7  by  means  of
+OPEN#7,7,7.
+
+
+
+
+

@@ -1,0 +1,62 @@
+A  List of Technical Notes and  Diagrams
+
+By  October 1982 a set of  12  technical notes has been available free
+to dealers and customers. The last technical note to be issued was 18.
+There  are  also several technical diagrams on connections to a  range
+of printers  and on communications to other computers. The majority of
+questions  asked of  the technical support staff were capable of being
+answered  by these notes. Orginally the manual was  photo-copied  from
+the  hand-book    produced   for    the     Leasco  VBrain.  This  was
+corrected  and  improved and in January several thousand  copies  were
+printed.  However, only the OEM user could claim to require more  than
+the FREE technical notes.
+
+The Technical Notes are:-
+ 1 VF display character set
+ 2 NewBrain keyboard codings (UK)
+ 3 NewBrain keyboard codings (France)
+ 4 NewBrain printer interface
+ 5 Memory allocation (un-expanded)
+ 6 BASIC -general discription
+ 7 IOS
+ 8 Use of own memory by standard device
+   drivers
+ 9 Patching a device driver
+10 Operating system routines
+   (very useful for Z80 coding)
+11 Access to screen display characters
+12 NewBrain BASIC reserved words
+13 Keyboard sequences
+14 NewBrain BASIC-technical
+   specification
+15 The NewBrain Graphics package
+16 Screen Editor-technical specification
+17 NewBrain Keyboard codings (Norway)
+18 Production of user defined characters
+19 NewBrain Keyboard coding (Sweden)
+20 NewBrain Keyboard coding (Greece)
+21 NewBrain Keyboard coding (Demark)
+22 NewBrain Keyboard coding (Finland)
+
+In   addition the Technical notes  (still not finalised) for the  disk
+controller,  CP/M   and  Expansion interface which  were  issued  from
+Cambridge in   August:-
+
+101 CP/M utilities
+102 CP/M system
+103 DISCIO system
+104 CONFIGURE program
+105 KBBF IO
+106 SSE IO
+107 Paged memory operating system
+108 System Page Description
+109 BASIC extensions  with peripherals
+110 ACLPIO and ACVIO
+111 Centronics Printer Device Driver
+112 Z80 Port Device Driver
+113 Serial Memory Device Driver
+
+Technical   Diagrams included connections to Microline  80,82A,  Epson
+MX80,FX80,  Walters  WM2000,  Facit 4510, Smith Corona  TP1,  Penny  &
+Giles,   Olivetti     DY211,  Amber  2400,  and   the   Adler   DRM80.
+

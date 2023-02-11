@@ -1,0 +1,309 @@
+CP/M utility documentation TN101
+
+1)Introduction
+
+This   document  refers  to   the programs provided  on
+the  NewBrain   CP/M    system    diskette  that  where
+produced  by  Grundy Business Systems.  These  programs
+are  particular  to the  NewBrain CP/M system and  will
+not  work  on any other CP/M system. In  addition  they
+where  not  intended  to work with  the  NewBrain  MP/M
+system  (programs compatible with both would be  issued
+with  the  MP/M system). These programs should  not  be
+used through  a networked system.
+
+
+2)FORMAT
+
+Blank  diskettes  must be formatted with  this  program
+before use. When it is  invoked it will ask which drive
+is to be used for the formatting operation. If you have
+two   or  more  drives,  it is  recommended  to  use  a
+different  one   to   A:.  Answer A,  B,  C,  or  D  as
+appropriate  and press NEW LINE. The program will  then
+ask  you to place a blank diskette in the stated  drive
+and  press NEW LINE. If you have a single drive  system
+it  is important at  this point to remove  your  system
+diskette  and  place  a   blank diskette in the  drive,
+otherwise  your system diskette will become  formatted.
+To  avoid accidents it is a good idea to  write-protect
+your  system diskette. If anything other than NEW  LINE
+is  pressed  at  this point  control will return to the
+first  question.    Once  NEW  LINE    is  pressed  the
+diskette  will   be  formatted. At the  end  the  first
+question  will  be reasked and you can  format  another
+diskette.  If  you wish to exit the program  press  NEW
+LINE.  Before   you  do this make sure  that  a  system
+diskette is in drive  A  again.
+
+
+
+Notes
+
+i.  If  you have twin drives it is possible  to  insert
+blank  diskettes  in  both  drives  and press <A>  <NEW
+LINE>  <B>  <NEW LINE>. The type ahead buffer holds <B,
+NEW  LINE>    until    the  first  diskette  has   been
+formatted.
+
+ii.   Exiting from the program by pressing NEW LINE  in
+response  to  the request for drive  without  a  system
+diskette  (see below)  in drive A will cause the system
+to  hang.  This  usually requires   the  system  to  be
+switched off.
+
+iii.   This   formatting     program   does  not  check
+write-readability  of  the diskette,  and  provides  no
+assurance that the diskette  is ready to be written to.
+The  most  common  fault is that the diskette  was  not
+centred  correctly  when the drive   'door'  was  shut.
+Failure  is  rare  (<1%) but  annoying.  Inserting  the
+diskette  after   the  drive  has been  accessed  (i.e.
+assures  that  the motor is already  spinning)  reduces
+this  problem.     Try formatting the  faulty  diskette
+again.  If  this  problem re-occurs then the  fault  is
+either   the  diskette  itself  or  the   disk   drive.
+
+3)SYSGEN
+
+This   program  copies the  system information  on  the
+reserved tracks  from  one  diskette   to another,  and
+should usually  be run after formatting a new diskette.
+The  information copied will include the  configuration
+information   and    the      initial   command   line.
+
+When  activated it will first ask for the letter of the
+drive from which the system information is to be  read.
+Enter  the letter  of the drive and press NEW LINE. The
+system  information will then be read from that  drive.
+It  will  then  asked where the information  is  to  be
+written  to.  Answer  this in the  same  way,  and  the
+information  will  then be written. This question  will
+then be repeated. To exit the program press NEW LINE or
+CONTROL/C.  At any point diskettes in the drives may be
+removed or replaced as required.
+
+Notes
+
+i.   If  the  the  diskette   is incorrectly  formatted
+then  SYSGEN  will  return a BDOS  error.  Insert  your
+System  diskette   in  drive  A  and  press  CONTROL/C.
+
+ii.   If software is supplied  by your dealer, software
+houses, or friends it will not normally be sysgen.  The
+system   tracks    also  include  your  license  number
+(CP2-641-xxxx).  This  means  that you can  not  insert
+this diskette and enter CP/M, i.e. cold start. However,
+after  booting up  from your system master and provided
+you do  not  warm  start   (by pressing CONTROL/C), you
+will  be able to look at the directory of the  supplied
+diskette.
+
+iii.   DO  NOT sysgen  a  supplied diskette as you  may
+damage   the   diskette  (e.g.  if  the   formats   are
+different).  ALWAYS take  a copy of the diskette  first
+(see DCOPY  and SCOPY below, and  PIP in the  'Handbook
+For Disk Users', page 70).
+
+4)SETINIT
+
+This   program  will  set  up  an initial command  that
+will  be executed by the CP/M system when  cold-booting
+the  system.   For example, you may wish always to  use
+WORDSTAR. When the  program is activated it will prompt
+with  '>'. Type in the command you wish e.g.  "WS"  and
+press  NEW  LINE.  If  you wish to  clear  the  initial
+command just press  NEW LINE. The initial command  will
+then  replace  the previous  one. To leave the  command
+unchanged press  CONTROL/C. Note that  the command will
+be   set  on   the diskette in drive A: only. To  place
+it on other disks you must either repeat the program or
+SYSGEN  to the other  diskettes.
+
+5)EXIT
+
+This   program  exits  the  CP/M system. In the case of
+the     32K  CP/M  system  the  screen  will  go  blank
+temporarily  before  restarting BASIC.  While  this  is
+occuring  you  may press the stop key to re-enter  CP/M
+instead  (as on powerup). With the 64K system the  main
+menu  will reappear  and you can then select your  next
+program.
+
+6)SCOPY
+
+This   is  a program that copies a  diskette  track  by
+track when only a single drive is available. The method
+is  to  fill the RAM with a much as possible  from  the
+source diskette  and then write this to the destination
+diskette.  When  the program is started up it will  say
+
+"Press  newline to perform  disc copy or something else
+to return to the system."
+
+then,  if  newline was  pressed,
+
+"Place  source  disk  in drive  A:, and press  a  key".
+
+This   will  then  be  read,  and  then  it  will   say
+
+"Place  destination disk in drive A:, and press a key".
+
+This   will  then be written  to. The process  will  be
+repeated, until at the end it will re-print the orginal
+request.
+
+
+7)DCOPY
+
+This   is   a   program to  copy  a diskette  when  two
+drives  are  available. When it starts up it  will  say
+
+"Place   source  disc in drive A:, destination disc  in
+drive B: and press newline to start copying or  anthing
+else to   exit."
+
+A  track by track operation  will then take place,  and
+the request re-printed. This program will only work  on
+two  similarly  configured drives (PIP should  be  used
+otherwise).
+
+Note
+
+i.    If   'data   error'    appears  during  the  copy
+process  this may not be serious. As the program  reads
+track  for  track  the  fault may be  on  part  of  the
+diskette  that is blank, or has part of an extinct file
+on it.
+
+8)SAVECON and RESTCON
+
+Your  master diskette is supplied configured  for  twin
+drives, either  twin 800K or twin  200K. If your system
+is  different  then you can use CONFIGURE  (see  TN104,
+NBUG3,  page15)  program to change  the  configuration.
+Several  configurations have been created and  supplied
+on your system master.
+
+If  you only have a single  drive then it is  important
+to  re-configure  as a single  drive system,  otherwise
+there  will  be an appreciable delay whilst the  system
+repeatly  looks   for  the non existant  second  drive.
+
+e.g.
+
+restcon cs80
+
+This  new configuration does not take affect until  you
+cold-start,  i.e.      exit        and  re-enter  CP/M.
+
+On the 80 track master:-
+  A       B            file
+  80      -            cs80
+  80      80           cs8080
+  80      40 on 80     cs80408
+  80      35 on 80     cs80358
+
+
+
+On the 40 track master:-
+  A       B            file
+  40      -            cs40
+  40      40           cs4040
+  40      35           cs4035
+  40      80           cs4080
+
+Other files available are
+
+cs80354  35 on B:80
+cs8035D8 DS 35 on B:80
+cs8040   NewBrain A:80/B:40
+cs80TD48 Tuscan DS 40 on B:80
+cs80TU44 Tuscan SS 40 on B:40
+cs80TU88 Tuscan DS 80 on B:80
+
+and  .CON files for twin 80 track, although most can be
+quickly reconfigured using XCONFIG.
+
+EPQX10
+GEMINI80
+KAYPRO
+LYNX
+MSDOS
+PEGASUS
+PIED
+RML40
+TEL803
+TRNSTEC
+
+If   you  require  a   different configuration (say 80,
+40  and  40  track) then use  CONFIGURE  and  save  the
+configuration on  your working master.
+
+To   create  a  new  configuration file enter  (in  our
+example)
+
+savecon cs804040
+
+This  reads the configure information from  the  system
+tracks  on the diskette in drive A:, and saves it in  a
+file  in hexadecimal. This is the reverse  of  RESTCON,
+which  restores    a  previously  saved  configuration.
+
+Note
+
+To  re-configure your system from 40 track to 80.  This
+is a requirement for users who up-grade their single 40
+track   drive   to  80  or  twin   80   track   drives.
+
+Your     single  40  track    drive    is  already  the
+'terminated'  A:  drive.  'Terminated'  refers  to  the
+resistor  pack on the circuit board of the drive.  Only
+the  last drive on the cable has this resistor. Set the
+80  track  drive  up as a B:  drive  (i.e.  remove  the
+resistor  pack and select DS1 instead of DS0: refer  to
+instructions  supplied with  the drive or contact  your
+supplier).
+
+Switch   on the system and  enter CP/M, with a copy  of
+the CP/M master diskette in drive A:.
+
+A>restcon cs4080
+
+A>exit
+
+This  is necessary to re-boot the information from  the
+system  tracks. Re-enter CP/M. Insert  a blank 80 track
+diskette in drive B: and format it.
+
+A>PIP b:=a:*.*
+
+Copy  all the system files to it
+
+Now   restore  onto your 40  track diskette  cs8040  or
+cs8080  if available, or using CONFIGURE (see TN104  in
+NBUG3)  create   an  8080 set up.  This  can  be  saved
+directly  to   the  B:   drive. However if you do  this
+then SYSGEN the B: diskette with  the information  from
+the A: diskette.
+
+If    you  have  RESTCONed   then SYSGEN from drive  A:
+to drive B:.
+
+Now  re-wire your drives connecting the two  80  tracks
+together  or swapping the 80 and 40 track drives.  Your
+newly  created   diskette will now allow you  to  enter
+CP/M.
+
+It   is   far easier  to  do  than describe.  Remember,
+that  in order to use the disk system the  diskette  in
+drive A:  must  be configured correctly to your set up.
+That  is  the diskette must be FORMATted, SYSGENed  and
+correctly CONFIGURed.  Failing that, or otherwise  NBUG
+is  able to create for you a master diskette configured
+for  your  requirements from a copy  of  your  original
+master.
+
+CSP 130583, GFG 301284
+
+

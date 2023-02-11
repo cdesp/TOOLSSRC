@@ -1,0 +1,313 @@
+Description of the NewBrain DISCIO system TN103
+
+1) Introduction
+
+The    NewBrain   DISCIO   system provides the  ability
+of  assembler programs or high-level language  programs
+(e.g.  BASIC, COMAL) to use the facilities of the  CP/M
+2.2  disk  filing  system, without  actually  operating
+under  CP/M.  This  is  done  by   providing  4  device
+drivers,  devices  12-15,  which  when  called  in  the
+correct  manner   provide the program with  serial  and
+random  access to disk files, and the ability  to  read
+and  update the directory. These devices are  available
+under  both the paged and non-paged NewBrain  operating
+systems,  provided  that  the disk  controller  box  is
+present.
+
+The    diskette  in  drive  A  must  be  sysgened   and
+configured for  the drives being used. As CP/M's system
+information   is  loaded into RAM CP/M is a sub-set  of
+the NewBrain IO.
+
+2) DISCIO files
+
+Since   DISCIO uses the CP/M  2.2 disk  filing  system,
+the  filenames  used are the same  as used by CP/M 2.2.
+That is  an optional drive identifier which is a  drive
+letter  followed by  a colon, a 1-8 character  filename
+optionally followed   by    an extention which is a dot
+followed    by  1-3   characters. Extra  characters  in
+either  field are ignored (which differs from it's  use
+under  CCP  :  console command processor). Examples  of
+filenames  are FRED, PROGRAM.BAS, and B:CODE.COM.  When
+opening  a file you will have to specify the  filename.
+In  some   special circumstances you can use  ambiguous
+filenames.  In   these  cases, a '?'  is  a  'wildcard'
+character,  and  a '*'  specifies that the rest of  the
+field is to be completed with wildcard characters.  For
+example  "Z?"  will match Z1, ZT, ZZ etc., and  "*.COM"
+will  match   CODE.COM, ASM.COM,  STAT.COM  etc.  "*.*"
+matches  all  files.  When   an unambiguous filename is
+required  there   should be no  occurrences of  "*"  or
+"?". All letters  in filenames are converted to capital
+letters  automatically, and leading blanks are removed,
+and   bit  7  is  set  to   zero, therefore files names
+can  only  have characters those ASCII codes  are  less
+than 128.
+
+It   is  advisable to  avoid  the inclusion of  control
+codes in the file name, as they are operated upon  when
+displaying a directory under CP/M.
+
+3) Device 12 - BDISCIO
+
+This   provides   a   completely binary file serial I/O
+facility.  When opening the device the parameter string
+should  contain an unambiguous filename. The  bytes  of
+the  file  can then  be read or written,  depending  on
+whether  the  file was opened for input or  output.  An
+attempt  to read from a file opened for output or write
+to a file opened for input will result in no action. An
+attempt to read past the end of file will result in  an
+error.  Note  however that the CP/M filing system  does
+not make note of the end of file and so the end of file
+error  will   not be raised until the last  sector  has
+been  entirely  read.   Device 12  is  recommended  for
+saving  and loading BASIC and COMAL programs,  and  for
+reading  in  assembler  programs assembled  by  a  CP/M
+assembler  into  a  COM file. All output  file  streams
+must be closed. Closing an input file has no effect but
+it     is   advised   that  programs  should   do   so.
+
+4) Device 13 - TDISCIO
+
+Device   13  is extremely  similar to  device  12,  but
+operates  in a way so that text files created by a CP/M
+editor  or word processor can be read or written.  When
+outputting  to  a file opened by device 13 a  line-feed
+is  inserted   after every carraige return, and 1AH  is
+treated  as  a  file  terminator which is  output  when
+closing  the  file. Likewise when reading from  a  file
+opened  by device 13 line- feeds are ignored and 1AH is
+treated  as   an    end    of    file  indicator.  When
+end-of-file  is  reached 1AH is returned when INPUT  is
+called.
+
+Such   files  can be TYPEd to  the console  under  CP/M
+(see   'Handbook     for   Disk  Users'     page   77).
+
+5) Device 14 - RDISCIO
+
+Device  14 provides the facility of random file access.
+Its  power  is however far greater than  that  of  CP/M
+random  file  facility  as it provides for  records  of
+variable size from 1 byte to the maximum 8 Mbytes to be
+read  or written at any position within the file. Files
+are   opened  in the same manner as in devices  12  and
+13, though in this case  it is immaterial as to whether
+the device is open for input or output.
+
+Once   a  file  has  been opened   by  device  14,  any
+sequence  of reads or writes can be  performed.  Before
+each  is done a  six-byte header sequence must be  sent
+to  the device. This consists of two three byte  binary
+numbers  of which the most significant bytes should  be
+sent  first.  The first number specifies  the  position
+within file that the I/O is  to commence from, and then
+the length of area that is to be transputed. Neither of
+these  numbers  should have their most significant  bit
+set. Whether the transputation is an input or an output
+is  determined  by the next I/O to  be  performed.  The
+program  then  must either read or  write the number of
+bytes   that     he  specified  the   length   of   the
+transputation to be.
+
+When   transactions with  a  file have been  completed,
+then  it  must be closed if it has  been  updated,  and
+should  in any  case be closed. It is worth noting that
+the  CP/M  filing  system  does  not  provide  for  the
+deletion of areas no longer required in a random  file,
+so if device 14  is to be used for a data base facility
+then   either  the   data   base  system  should  reuse
+redundant areas or else  should provide for copying  to
+a  new restructured file and deletion of the old  file.
+
+
+
+Example:
+
+10 OPEN#14,14,"TEMP"
+20 INPUT("STARTING ADDRESS - ")
+        X:GOSUB100
+30 INPUT("LENGTH - ")X:GOSUB100
+40 LINPUT("INPUT OR OUTPUT?")A$
+        :IFA$="O" THEN 60
+50 FORA=1TOX:GET#14,Y:PUTY
+        :NEXTA:PUT13:GOTO20
+60 LINPUT ("STRING?")A$
+        :FORA=0 TO X-1
+70 PUT#14,MID$(A$,A+1-
+   (INT(A/LEN(A$))*LEN(A$)))
+        :NEXTA:GOTO20
+100 PUT#14,X/65536,(X/256)AND
+        255,X-(INT(X/256)*256)
+        :RET
+
+Note
+i.  A  six byte number FF FF  FF Hex provides 1 677 215
+as   an  integer  to base ten. Line 100  in  the  above
+example  provides   the conversion of an integer  to  3
+bytes.
+
+ii.  Line 70 produces a line of X characters,  even  if
+the  input string is too short. Lines must ALWAYS be of
+the  correct length, either by truncating or by  adding
+spaces.
+
+6) Device 15 - SDISCIO
+
+This   provides the  facility  of reading and  updating
+the  directory.     When   opened   no  parameters  are
+required  and  the port number should be 0. The program
+interacts  with  device driver by means  of  conducting
+transactions.  The program  will first write a  decimal
+digit   to  the  device  to  indicate  what   kind   of
+transaction  is required. Each has its own number. When
+passing  parameters  to device 15,  spaces,  TABs,  and
+newlines  are  valid separators. When receiving results
+from  device   15,   a newline character will mark  the
+end of the result. The rest  of the transaction depends
+on     the   number.  The  various  transactions   are:
+
+Type  0  - Deletefile. Takes  as argument an  ambiguous
+filename and  deletes all files  matching it. No result
+is   returned.
+
+Type   1   -  Renamefile.    Takes   as  arguments  two
+unambiguous filenames,  and causes the first file to be
+renamed as the second filename. No result is  returned.
+
+Type  2  - Select disk. This takes a capital letter  as
+argument  indicating  the  new default  drive  for  all
+subsequent  disk  operations.  No result  is  returned.
+
+Type 3 - Search for first.  This initiates a  directory
+search  process.  This takes an ambiguous  filename  as
+argument and returns the first filename matching it. If
+no  match  is  found then a null  string  is  returned.
+
+Type   4  - Search for next.  This must only be  called
+after  a type 3 or 4 transaction. It takes no  argument
+but  returns the  next matching filename. If no further
+match  is   found  then  a   null string  is  returned.
+
+Type  5  - Return default  disk. This takes no argument
+but  returns a letter giving the current default  disk.
+
+Type 6 - Reset disk system. This takes no argument  and
+no   result.  This  resets  the  CP/M  filing   system.
+
+Separators  between arguments can be commas,  newlines,
+or  tabs.  Results  returned will be  terminated  by  a
+newline.
+
+Examples of use:
+
+Open the device on stream 15.
+
+10 OPEN#15,15
+
+Erase a set of files
+
+20 ?#15,0,"*.bak" :REM erase
+        all back up files
+
+Loggin  drive B: and  erase  all
+backup files from it
+
+30 ?#15,2,"B",0,"*.bak":REM erase all back up files
+       on drive B
+
+Rename oldfile.old as newfile.new
+
+40 ?#15,1,"oldfile.old newfile.new"
+
+Find   out  what  the  current  logged  in  drive   is.
+
+50 PRINT#15,5:INPUT#15,a$:?a$
+
+Reset disk system
+
+60 PRINT#15,6: REM reboot CP/M
+
+To obtain a full directory of a drive.
+
+10 LINPUT ("Which drive do wish a directory of ? ")a$
+20 a$=CHR$(ASC(A$) OR 32)
+30 IF a$<"a" OR a$>"d" THEN
+      PRINT "Drive must be A to D":GOTO 10
+40 OPEN#15,15:PRINT#15,3,a$+":*.*"
+50 LINPUT#15,a$:IF a$<>""THENPRINT a$,:
+      PRINT#15,4:GOTO 50
+60 CLOSE#15:END
+
+7) DISCIO Modularity
+
+The  DISCIO  module requires three  subroutines  to  be
+provided  as  external routines. INITCPM,  ENDCPM,  and
+BDOS.  The first two are called when any of devices  12
+to  15  are  opened  or  closed. BDOS  is  expected  to
+perform the same function as the CP/M BDOS (Basic  Disk
+Operating  System) function. This provides for the  use
+of  the  DISCIO module with a CP/NOS  system  to  allow
+access  to the central filing system within a  network,
+or  whatever    CP/M  compatible DOS  system  is  used.
+
+8) Technical note
+
+When any DISCIO device is opened the CP/M filing system
+is  introduced, and by calling INITCPM or ENDCPM a  use
+count  will  be maintained. If the  use count falls  to
+0,  the   space  taken  by the  filing  system  may  be
+relinquished.  There  will  not be two  copies  of  the
+filing  system   at  any one time.  In   the  non-paged
+system  the    filing  system will take  up  about  4.7
+Kbytes.  In the paged system  the DISCIO system  claims
+an entire page for its own use.
+
+9) Error numbers
+
+150 - Bad filename. The filename provided as  parameter
+when  opening  device  12, 13, or 14  or  a  device  15
+argument  is syntactically incorrect, or  is  ambiguous
+when it should not be.
+
+151   -   Input  error.  Either  a physical disk  error
+has  occurred  or the end-of-file has been  reached  on
+device 12.
+
+152   -   Output error.  Either  a physical disk  error
+has occurred or the disk has become full.
+
+153   -   Directory error. A  file requested  does  not
+exist  in   the  directory, the directory is  full,  or
+there  was   a  physical disk error  when  reading  the
+directory.
+
+154  -  Initialisation error.  The CP/M  filing  system
+could not be loaded, either due to lack of memory, or a
+disk fault.
+
+155   -   Transaction error.  With devices 14  and  15,
+inputting  when an output was expected,  or vice versa.
+
+156   -   Not  port  zero.  Opening device  15  with  a
+non-zero port.
+
+157    -  Filename  too  long.  A filename presented to
+device 15 is too long.
+
+158  -  Transaction type error. An  transaction  number
+presented to device 15 is illegal.
+
+159   -   Random  transput  error. Attempt to access  a
+file  beyond  8 Mbytes, or a length of  zero  has  been
+specified.
+
+With  some  physical  disk  errors, a  message  may  be
+output  to   the  console  in  addition  to  the  error
+condition being raised.
+
+CSP 060583, GFG 301284
+

@@ -1,0 +1,284 @@
+CONFIGURE  program    documentation
+
+issue 1.1 Technical Note 104
+
+
+1) Introduction
+
+The   NewBrain  CP/M   CONFIGURE program which will run under both 32K
+and  64K  CP/M   systems,  allows  the user to  set  his  CP/M  system
+according to the type of disk drives and devices he wishes to use. The
+information is processed and written to the first sector of the  first
+track  of  the drive specified  at  the end. This information is  thus
+copied during SYSGEN  and  does not affect the files on the disk.  The
+information is  only read in at cold boot time, so will not take force
+until   that  occurs.  When  a cold  boot  occurs,  the  configuration
+information is read off the disk in physical drive 0 (usually A:). The
+information  on  diskettes  in    any  other  drive  is  ignored.  The
+configuration  information   is used in both CP/M systems and in  both
+the paged  and  non-paged DISCIO systems (under the NewBrain operating
+system).
+
+NB:     This    is  the  first  of    four  programs  developed.  SAVE
+CONfiguration  and      RESTore CONfiguration where  written  to  help
+users  set up a library  of configurations. CONFIG.BAS was written  to
+allow the CS*  files to be edited without running through the sequence
+outlined  below. One program ought to have been written to  allow  the
+creation,  editing and restoration of configure files. Still, this  is
+what we have  and have to live with it.
+
+2) Starting up
+
+From  the  CP/M prompt (A>)  enter CONFIGUR and  press  newline.  When
+running  the program the user may abandon the program, at any point by
+typing cntrl/C, and no change will be made. When answering a  question
+the  CP/M line editor can be used to correct answers. Once newline has
+been  pressed   it  is  not possible to correct any errors.  The  XSUB
+utility may   prove useful.
+
+3) Configuring the disks
+
+3.1) How many disk drives do you wish to configure
+
+Enter  the number of disk  drives there are in your system. This  will
+usually be a maximum of  4, but may be more if you have a hard disk or
+have  a   RAM  disk facility. If you specify more than there  are  the
+floppy  disk  controller will not object, but there will be a  strange
+delay  of a few seconds on cold booting while the controller  attempts
+to recalibrate    the    unattached drives. (Note the CP/M master from
+GBS  was supplied set up for twin drives, hence the advise to  RESTCON
+cs40  or  cs80 for  owners of single drive systems.) From now  on  the
+questions will  be asked for each drive.
+
+3.2)  What is the physical drive number (Usually n)
+
+This   gives  the   hardware  drive number to be used  to  access  the
+drives.  Usually   you   should respond with the suggested value,  but
+if  you  have  hard disks or RAM disk facilitys they may be different.
+
+3.3)  What  is  the  gap  length (usually 42)
+
+You    should   always   enter     42   unless  you  have  other  disk
+controllers.
+
+3.4)  What is the gap length  on formatting
+
+You    should  always  enter   40 unless you have strange disk drives.
+
+3.5)  What  is  the special parameter byte of the  drive  (usually  0)
+
+This   will   be 0 usually  though setting certain bits  have  certain
+interesting  effects.  Setting bit 0 will cause data to  be  read  and
+written  to the disk in inverted format. This can be used for  example
+when  reading many SuperBrain disk formats. Setting bit 1  will  cause
+the  disk   contoller   to  double  the track number  when  seeking  a
+certain track   (though    the cylinder number in the sector  searched
+for will remain unchanged). This can be useful for reading a 48 tracks
+per  inch  (TPI)  formatted  disk  with a 96  TPI  drive.  It  is  not
+recommended to write to a disk in this  mode as it may not be read  by
+a 48 TPI drive reliably.
+
+3.6)     What  is  the  seek  rate    for  the  disk  in  milliseconds
+
+Consult the technical manual for the drive you are using and enter  in
+the  correct value.  If in doubt 32 is safe but slow. If the drive has
+been supplied  by Grundy Business Systems the value you require should
+be  supplied. The 48TPI single sided drives were set up at  20ms,  and
+the  96TPI  double  sided drives at 4ms. Usually  48TPI  double  sided
+drives require 20ms.
+
+3.7)  What  is the  sector  size (512 or 1024)
+
+The  disk controller supports two sizes of physical sector  size,  512
+and  1024.  However   the software will only support a 512 byte sector
+unless  an  expansion box is used. Usually a 512 byte sector  will  be
+used.  (For   this reason Osborne 100K diskettes can not be  read,  as
+they require 256byte sectors, ditto IBM).
+
+3.8) How many sectors are  there per track
+
+This   question  refers  to  the number of physical sectors (NOT  CP/M
+sectors)  there   are   per track. If 5.25 inch disks are  being  used
+there  is  a  maximum of 10 (which is the usual value)  for  512  byte
+sectors and 5  for 1024 byte sectors.
+
+3.9)  What  is the  skew  factor (usually 0)
+
+Normally you will enter 0.  This is because when you format a disk the
+controller  will  hard-format  the most optimum skew factor  onto  the
+disk.  However   you may wish to  use  a software skew to  read  other
+formats  of  disk.  For  example, many SuperBrain formats use  a  skew
+factor  of   2.  The   skew factor is one greater than the  number  of
+physical  sectors  skipped between reading sectors on a track  in  the
+logically correct order.
+
+3.10)  How  many sides does  the drive have (1 or 2)
+
+Enter  1 for single sided  drives and 2 for double-sided  drives.  You
+may  of course enter 1 for  a double-sided drive if you wish to read a
+single  sided  disk  in it. If you answer 2 you will  then  be  asked:
+
+3.10.1) Are the tracks  numbered .....
+
+If  you have a double-sided drive you can either use the tracks on one
+side of the disk followed by the tracks on the other side, or you  can
+use  first a track on one side, then a track on the other. If you wish
+to  use  the   former  then reply 1, if  the  latter  (which  is  more
+efficient  and  is the usual NewBrain format) then reply 2. Many alien
+formats (e.g. SuperBrain) do however use the former scheme, or confuse
+everyone   and  use  both.  If  you have  48TPI  double  sided  drives
+compatability with single  sided drives can be maintained by answering
+1.
+
+3.11)     How   many  tracks  per    side  are  there  on   the   disk
+
+To   answer  this  question  you should refer to the technical  manual
+of  the disk drive. For a 5.25 inch drive normally it will be 40 for a
+48  TPI drive and  80 for a 96 TPI drive. (Note certain diskettes  are
+not capable   of  working  to  40/80 track, and therefore care must be
+taken   to   use   only  those  that  state  40  track/   80   track.)
+
+3.12) How many track are reserved (Usually 2)
+
+The   usual answer will be 2. The system information in  the  NewBrain
+system  tracks  take  up 7K bytes, and the reserved tracks  should  be
+enough to hold this.
+
+3.17)    What  is  the  blocksize    in  Kbytes  ([1,]2,4,8,  or   16)
+
+Usually  it will be 2 for 48  TPI single/double sided drives and 4 for
+96  TPI  double sided drives. Other format diskettes  may  have  other
+blocksizes.  If introducing a wierd format a rule of thumb is to use a
+blocksize that  will give you between 128 and 255 blocks. The  maximum
+number  of  blocks  is 512. Once you have answered this  question  the
+program  will tell you the  disk capacity. This may be less  than  the
+advertised  capacity for  two reasons. Firstly it does not include the
+space for the system tracks and secondly it will be a multiple of  the
+blocksize  and  any  odd  amount is unused. This  will  be  the  value
+displayed when doing a STAT DSK:.
+
+3.18)  How  many entries are there in the directory  (multiple  of  n)
+
+Usually   this  will be the lowest number possible. If it  is  greater
+than  128  then a message will be output which states  that  only  128
+entries will be checked. This means that the CP/M system will only sum
+check  the  first  128 directory entries in its system  which  detects
+whether   the     disks     have     been   changed   surreptitiously.
+
+3.19)  Is  the  disk   removable (1=yes, 2=no)
+
+Usually   answer   1,  but   for non-removable hard disks and RAM disk
+facilities  it may be  more efficient to answer 0. If you answer 0 the
+CP/M  system   will not use its directory sumcheck  system  to  detect
+whether the disks have been changed.
+
+4) Configuring devices
+
+This  information is only used in the 64K CP/M system, to describe the
+devices  that are attached to the CP/M logical devices (IOBYTE is  not
+used). Stream 0 refers to the keyboard, stream 1 refers to the screen,
+stream  2 refers  to the printer, stream 3 refers to the reader/punch,
+and stream  4 is for keyboard status.
+
+You    should    respond  as    follows  (null  means  just  newline):
+
+Stream 0 - 19 (may be 6 on  some
+            prototypes), 0, null
+Stream 1 - 18, 0, null
+Stream 2 - 16, 0, *0L0
+Stream 3 - 17, 0, *0n
+Stream 4 - 3, 0,  16
+
+5)   Finishing  at  the end it will ask you which drive you  wish  the
+configuration information to  be written to. This is your last  chance
+to  press  cntrl/C.   If   A  then  reply 0, if  B  then  1  etc.  The
+information  will  then  be written to the disk and the  program  will
+finish.
+
+CSP 13/4/83  : GFG 2/5/84
+
+NB   due   to the  liquidation  of stock more than one version of  the
+serial and centronics device drivers have been sold. None of them work
+correctly  in   all manners.
+
+Device   16 baud  rate  parameter does not work. I have been  told  by
+one  source   that   using    a buffer of 1 solves  this.,  ie  *1l80.
+
+Devices
+             device port string
+
+keyboard ?       19   0  -
+screen   TTY     18   0  -
+printer  PTR     16   0  l0*0
+comm     PUN/RDR 17   0  n*0
+VF display     ?  3   0  16
+
+Alternatives
+Centronics print 21   0  *0
+
+Serial ACIA parameters
+T    (n) tansmit baud rate
+R    (n) receive baud rate
+I    immediate return
+L    <n> line length
+S    <1/2> stop bits
+D    <7/8> data bits
+A    <n> selects port
+P    <Odd/Even/Z=none> parity
+F    full Duplex
+H    Half Duplex
+N    NewBrain to NewBrain
+*    <n>Buffer size (255bytes)
+
+e.g.   *4L132T19200 a 1Kb  buffer with line length of 132 columns  and
+transmitted at 19 200  baud, for some communications H may have to  be
+included.
+
+
+ Configuration Parameters for NewBrain diskettes and to Read
+Foreign Disk Formats                issue 1.1
+
+Parameters for Configuration
+
+Notation   8080   means twin 80 track system. 80408  means  80   track
+drive  A, and a 40 track diskette read on an 80 track drive B.  TU  is
+Tuscan  format.   35 implies SuperBrain. D stands  for   double  sided
+48TPI.  Files type cs* where c stands for configure  and  s for serial
+streams  devices   16  and  17.  cc   therefore   means  configuration
+centronics.
+
+                cs file names eg cs80
+                80      40      408     358     354     TU88    35D8
+drive number    0,1,2 or 3
+gap length      42 usually
+gap len.(format)40 usually
+special param.   0       0       2       3       1       1       3
+seek rate (ms)   4      20      20      20      20      20      20
+sector size    512
+sectors/track   10
+skew factor      0       0       0       2       2       2       2
+sides            2       1       1       1       1       2       2
+tracks numbered  2       -       -       -       -       2       1
+tracks/side     80      40      40      35      35      80      35
+tracks reserved  2
+block size (Kb)  4       2       2       2       2       2       2
+entries        128      64      64      64      64     128      64
+disk removable   1
+
+                TD48    TS44  Lynx    Hungarian
+drive number    0,1,2 or 3
+gap length      42 usually
+gap len.(format)40 usually
+special param.   3       1       0        0
+seek rate (ms)  20      20      20       20
+sector size    512
+sectors/track   10                        7
+skew factor      2       2       0        0
+sides            2       1       1        1
+tracks numbered  2       -       -        -
+tracks/side     40      40      40       45
+tracks reserved  2
+block size (Kb)  2       2       1        2
+entries        128      64      64       64
+disk removable   1
+

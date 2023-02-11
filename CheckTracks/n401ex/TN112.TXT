@@ -1,0 +1,76 @@
+ Z80  Port  Device  Driver  TN112
+(NewBrain  Expansion Interface)
+
+ General Description
+
+The   Z80  Port  Device   Driver (Device Type 7) allows
+a  single  INPUT  or OUTPUT to any given port  to  take
+place in  response to each call to INPUT or OUTPUT.  On
+the  unexpanded NewBrain, only the lower 8 bits of  the
+address  line  are significant in such an IO  operation
+at  the  Z80    level,  and  only  these  bits  may  be
+determined  when  a  stream  of type  7  is  used.  The
+enhanced  device  driver  provided  for  the   expanded
+NewBrain  permits   the  user  to specify the  upper  8
+bits  as well as the lower 8 bits of the port  address,
+and  allows  more  than one stream to address any given
+port  (to avoid  problems  which would otherwise  occur
+when  a  user wished to address two ports which  differ
+only   in   the  upper  8  bits  of   their   address).
+
+The   port  address is  determined completely when  the
+stream  is  opened, and cannot be  changed  thereafter.
+
+ Compatibility
+
+On   the  unexpanded NewBrain, the upper 8 bits of  the
+address line are not determined and will in general  be
+different  on  successive  IO operations.  However,  no
+syntax error messages are given whatever the  parameter
+string.  As no use  is made of the parameter string  in
+the  unexpanded   device  driver,  this  difference  is
+considered to be trivial.
+
+ OPEN
+
+Parameters     supplied   on  open  are   as   follows:
+
+1  Device  Number  The device number of  the  Z80  Port
+Device is 7.
+
+2 Port Number The port number determines the value used
+for  the lower 8  bits of the port address on INPUT  or
+OUTPUT,  but  this  may be  changed  by  means  of  the
+parameter string low-option, in order to open more than
+one  stream with  the same value in the lower 8 bits of
+the address.
+
+3  Parameter String The parameter string must have  the
+following  form:
+
+parameter-string   ::=     [address-option]*
+
+address-option    ::=  low-option ! high-option
+
+low-option       ::= L number
+
+high-option      ::= H number
+
+number           ::= 0..255
+
+ INPUT
+
+One    byte   is  read  from   the specified  port  and
+returned.
+
+ OUTPUT
+
+The   byte entered to the  device driver is written  to
+the specified port.
+
+ CLOSE
+
+No action is taken.
+
+               MJCA 15 Jul 83
+

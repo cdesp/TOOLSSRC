@@ -1,0 +1,240 @@
+ CP/M system description TN102
+
+1)  Introduction
+
+The  NewBrain  CP/M  system operates  with  two  memory
+configurations  - the 32K and 96K systems  only  (hence
+the  normal CP/M utility MOVECPM is not required).  The
+32K  system  requires a NewBrain A or AD and  a  floppy
+disk  controller  with at least one floppy disk  drive.
+The  96K  system (64K CP/M) requires, in addition,  the
+expansion  box fitted with 64K extra RAM. Although  the
+two  systems  work in the same way, you may  find  that
+some  of  the CP/M programs  you wish to run will  only
+operate  in the full 96K system. For example  WORDSTAR,
+Microsoft BASIC  and Pro Pascal, will only run on a 64K
+system.
+
+The   same disks can be used  for either system, and no
+re-configuration is  required.
+
+The   transient  program  area  in the  32K  system  is
+approximatley  24K    and    in     the   96K    system
+approximately 57K.
+
+2) Entering the CP/M system
+
+With  the 32K CP/M  system  this can done by using  the
+comand "CPM" from BASIC or by  pressing the stop key on
+power  up.   The  96K  system can only  be  entered  by
+selecting  "CP/M 2.2" from the system menu. The  system
+information  will   be  read   from  drive  A  and  the
+copyright  message  will  be displayed.  At this  point
+if  an  initial  command has been set  by  the  SETINIT
+program  it   will  be  executed.  Otherwise  the  CP/M
+prompt "A>" will be displayed.
+
+If   the  diskette has  not  been sysgened or is of the
+wrong  format   for the drive  then   the  message  'No
+response  from  disc controller', or 'data error'  will
+be displayed.
+
+3) The keyboard
+
+The   keyboard  operates  in   a slightly different way
+than  under normal conditions. The first thing is  that
+control  codes   will operate as is  usual under  CP/M.
+This  means  that, for example it  is  not  immediately
+possible  to  change  the  mode  of  the  screen  using
+CONTROL/W. To do this the codes have to be sent to  the
+screen.  A trick  to get round this is to use the  fact
+that  the   command   program  reflects  unrecognisable
+commands.  If  you wish  say  to make the screen  black
+on  white type following "A>" CONTROL/W, CONTROL/Q  and
+newline.  The  screen will change followed by a "?"  to
+indicate  that the control program doesn't  understand.
+The  desired  effect will however have  been  achieved.
+
+Since  the cursor control, home, insert and escape keys
+are  really control keys, these will also not have  the
+expected  effect,  unless  the program being  run  will
+interprete them.  One effect is that cursor left  often
+means  delete  the  character  on the left,  and  shift
+cursor  left will often mean delete everything  on  the
+left  up  to the prompt (if any). Many  programs  (e.g.
+WORDSTAR)  will use  their own control keys for  cursor
+movements.
+
+The  NewBrain  keyboard  has  no 'delete' key. When the
+delete  key  is refered to in CP/M documenation  or  in
+CP/M  program documentation the control key  should  be
+used with  the  comma key instead.
+
+The  control  0 to 9 functions now have  new  meanings.
+CONTROL/0 to CONTROL/7 have no effect (they are to have
+special   meanings under MP/M). CONTROL/8 will set  and
+unset  'capital letter lock'. When this mode is set all
+letters  keyed  in will be  made into capitals  whether
+or not the shift key is pressed. This is similar to the
+old  CONTROL/1 function. Whenever this mode is set, the
+mode ('TELETYPE  CAPS') will be displayed on the single
+line  display  in  model AD NewBrains.  To  obtain  the
+meanings  that  the CONTROL/0  to  CONTROL/9  keys  had
+previously,   CONTROL/9      should    be       pressed
+beforehand.
+
+The   stop  key  has  no  effect (although the COP will
+hold   the break key status if you return to BASIC  via
+EXIT).
+
+The     keyboard   operates  on  a  type-ahead  buffer,
+which means that anything typed in will be stored until
+the  next input  is required. The buffer is 256  bytes.
+This can be useful if you know exactly what the program
+requires   as  you  can type  ahead  of  the  displayed
+menus. However it is also very easy to fill the  buffer
+with cursor control codes as these keys auto-repeat (as
+in  many CP/M word processors). Some programs clear the
+buffer, insisting  that  you respond  to the  displayed
+prompt.
+
+4) Screen codes
+
+The   screen  used  by  CP/M   is similar to the normal
+screen  editor  except it is much  simpler,  and  hence
+faster.  It  operates on 25 lines of 80 columns  screen
+using  the normal character set. Characters  whose  top
+bit  are  set  (i.e.  ASCII codes 128-255) will display
+according  to   the  current   TV mode. When  the  last
+column  has been typed to the cursor stays on the  last
+character  but  changes  from  a line  to  a  block  to
+indicate  that  the   next character typed will  appear
+on  the  next  line.  Those  control codes  not  listed
+below  will  perform no action at the moment, but  they
+may  be   made  to  do something at a  later  time  and
+should  be  avoided. The screen is compatible with  the
+Lear-Siegler ADM-3A    terminal,   which   is available
+as   an   option  in    many   installation   programs.
+
+Note:   Screen   codes  only  work when written out  to
+the  screen. Many CP/M programs can not take  advantage
+of this   facility.
+
+00H - Null. No action.
+
+01H  -  Insert line.  The  lines below the current line
+(if any) are scrolled down. The current line is cleared
+and  the   cursor  is  moved to  the  left  hand  side.
+
+
+02H   - Delete line. The  current line is  deleted  and
+the  lines below (if any) are scrolled up. A blank line
+is inserted at  the bottom of the screen.
+
+03H  - Delete to the end of line. The character at  the
+cursor  and all characters to the right of it (if  any)
+are converted  to spaces.
+
+05H   -  Cursor off.  The  cursor will cease to  flash.
+
+06H  -  Cursor  on.  The cursor will  start  to  flash.
+
+08H  - Backspace. The cursor  is moved one space to the
+left,  or if it was on the left hand side to the  right
+hand  side  but   one  of  the  above  line  (the  80th
+character).  If the cursor was at the top-left  corner,
+it is moved to the top-right corner.
+
+09H   -   Tab.  Spaces are  printed  until  the  column
+number  is  a  multiple of 8. A new line  is  taken  if
+necessary.
+
+0AH  - Cursor down. The cursor is moved one space down,
+and if the cursor was at the bottom of the screen,  the
+screen is  scrolled up and a blank line inserted at the
+bottom.
+
+0BH   -  Cursor up. The cursor  is moved up  one  line,
+unless it was already at the top line.
+
+0CH  - Cursor right. The  cursor is moved one  position
+to the right, or if it was beyond the right most column
+(with   block cursor) it is moved to the second  column
+on the next  line.
+
+0DH   -  Carriage  return.   The cursor is moved to the
+left  of the current line.
+
+11H   -  Insert  mode.   Further non-control characters
+are inserted at the cursor position, with the character
+previously at the cursor position and characters to the
+right   of   it  moved to the  right.  Characters  over
+flowing  the  right hand side of the screen  are  lost.
+This mode  is cancelled when  another control character
+is   sent.
+
+14H   -   Escape.   The   following  character  is  not
+interpreted  as a control code, except for 0, which  is
+always ignored.
+
+15H   -  Clear line. The  current line is written  with
+spaces  and  the  cursor moved to the left  hand  side.
+
+16H-   Set   cursor    position. Following this control
+code  the next two characters sent are  interpreted  as
+the  column  and row number to which the cursor  should
+be set. The column number should be sent first. The top
+row   is row 1 and the left  most column is  column  1.
+
+17H   -  Set TV  mode.  Following this control code the
+next character  sent will set the  TV control  register
+whenever  that  screen is being displayed. Only bits  0
+and 1 are  interpreted. Bit 0 determines the background
+colour (0 means background dark, 1 background  bright).
+Bit  1  determines  how characters with bit 7  set  are
+interpreted  (0 gives reverse characters, 1 allows  256
+character set).
+
+18H  -  Delete left. The character to the left  of  the
+cursor  is deleted and subsequent characters are  moved
+one  position  to  the left. The cursor  is  moved  one
+position  leftwards. If the cursor was in the  leftmost
+column, no  action  is taken.
+
+19H   - Delete. The character  at the cursor is deleted
+and  subsequent  characters are moved one  position  to
+the left.
+
+1AH   -  Clear screen. The  screen is cleared  and  the
+cursor is moved to the top left corner.
+
+
+1BH   -  Escape  2.  If  this  is followed by  anything
+other  than  '=' then no action is taken at the  moment
+(these sequences  are reserved for expansion). If it is
+followed   by   '='     then    a  conventional  cursor
+positioning  takes    place,  with   the   row  address
+followed  by the  column address. In this case the  top
+left corner  is  at  20H,  20H.
+
+1CH    -   Cursor   home  left.   As  carraige  return.
+
+1DH  -  Cursor home  right.  The cursor is moved to the
+right  most  column in the line  (with  block  cursor).
+
+1EH  - Cursor home. The cursor is moved to the top left
+corner.
+
+1FH  -  Clear  screen.  As  1AH.
+
+5) Other devices
+
+In   the  32K  system  the   PTR: device is always  set
+to  the printer port, and the RDR: and PUN: devices are
+set to  the communications port. These are set to  work
+at  9600 baud. In the 64K system the ports used will be
+in  the expansion box will  be used instead, but  these
+may   be   changed  by  using  the  CONFIGUR   program.
+
+CSP 010683, GFG 301285
+

@@ -1,0 +1,472 @@
+ACIA (Communications) Device Driver TN110
+
+GENERAL
+
+The  Asynchronous    Communications  Interface  Adapter
+(ACIA)  is  capable  of providing  a  range  of  serial
+communications  options  to  meet a variety  of  needs.
+These  may   be  accessed  through  the special  device
+drivers  provided  in  the Expansion  Interface  Module
+(EIM)   and      Peripheral  Interface  Module   (PIM).
+
+Two  device  drivers are  provided as part of  the  EIM
+software to operate the various ACIA channels available
+either on the EIM itself (marked LP or SERIAL  PRINTER,
+and V24or SERIAL COMMS) or on the Network Modules which
+can  be attached to  it  (marked CH0,CH1,..,CH7 on each
+Network  Module). Two similar device drivers, with some
+facilities  omitted,  are provided as part of  the  PIM
+software  to operate the two channels available on that
+module  (marked  CH0 and CH1). In each case,  a  simple
+RS232C  /  V24  interface is provided running  on  five
+wires:  DATAIN,  READY  TO RECEIVE, DATAOUT,  CLEAR  TO
+SEND, and GROUND.
+
+The two channels provided on the EIM use the same clock
+circuit  and  the  same ACIA, which is  multiplexed  in
+order to operate both channels. They must therefore  be
+operated  at  the same transmit and receive baud rates.
+All the ACIA channels on any one Network Module or  PIM
+share the  same clock  circuit, and so must be operated
+at   matching   transmit   and  receive   baud   rates.
+
+Up   to   four  Network Modules may be  attached  to  a
+NewBrain via the EIM. Each provides an additional eight
+communications  channels. The select switch must be set
+to  0  on  the  first Network Module, 1 on the next,  2
+on  the  third,  and  3  on  the last. Each channel  on
+each Network Module is referenced  by its ACIA  number,
+which   depends   on  the  setting  of   this   switch:
+
+        CH0  CH1  CH2  CH3
+Switch setting
+0       A1   A2   A3   A4
+1       A9   A10  A11  A12
+2       A17  A18  A19  A20
+3       A25  A26  A27  A28
+
+        CH4  CH5  CH6  CH7
+Switch setting
+0       A5   A6   A7   A8
+1       A13  A14  A15  A16
+2       A21  A22  A23  A24
+3       A29  A30  A31  A32
+
+The   device  driver designed   for  printer  operation
+contains   the   usual  automatic  NewBrain   features,
+including expansion of TABs and insertion of a  newline
+at  the end of a line. In addition, these features  can
+be  suppressed   or   the   line   length  changed,  as
+detailed under  OPEN and OUTPUT below. 
+
+OPEN
+
+Parameters     supplied   on  open  are   as   follows:
+
+1   Device  Number  The  device  number  of  the   ACIA
+communications  device   is  17, and that of  the  ACIA
+printer device is 16.
+
+2 Port Number No use of this is made by the device.  It
+can,  however,  be used to make multiple copies of  the
+device, for instance  when  the Network Module is used.
+
+3  Parameter String The parameter string must have  the
+following  form:
+
+parameter-string   ::=     [pstring-option]*
+
+pstring-option   ::=transmit-rate-option
+        or receive-rate-option
+        or length-option
+        or buffer-option
+        or immediate-return
+            -option
+        or acia-option
+        or data-bits-option
+        or stop-bits-option
+        or parity-option
+        or  protocol-option
+
+transmit-rate-option    ::=      T  75..50000
+
+Sets    transmit  baud  rate.  If receive baud rate  is
+over  19200,  then transmit baud rate must be  over   195
+
+receive-rate-option    ::=      R  75..50000
+
+Sets   receive  baud  rate.   If transmit baud rate  is
+over  19200, then  receive  baud  rate must be over 195
+
+length-option ::= L 0..255
+
+Sets line length for printer line. L0 suppresses  auto-
+features,ie gives "honest" output
+
+buffer-option ::= * 0..32
+
+Sets   buffer  size  in  256-byte  units.  *0   selects
+unbuffered mode
+
+immediate-return-option ::= I
+
+Requests   driver  to  return  with  error  instead  of
+waiting  for  data to be available or ACIA to be  ready
+
+acia-option ::= A 0..32
+
+A0  is on the Expansion  Module. A1-A8 are on the first
+Network Module, etc.
+
+data-bits-option ::= D (7 | 8)
+
+stop-bits-option ::= S (1 | 2)
+
+parity-option ::= P (O | E | Z)
+
+Odd, Even or Zero (no parity)
+
+protocol-option ::= H | F | N
+
+Several  of  the  options interact  with  one  another:
+
+protocol-option   N   is   not   allowed   unless   the
+no-buffer-option is selected - ie protocol N cannot run
+in buffered mode.
+
+The     parity-option   must   be selected, and must be
+O  or   E, when the data-bits-option is set to  7.  The
+parity-option  must not be selected, or must be set  to
+Z, if the  data-bits-option  is set to 8.
+
+Errors    may    result  on   OPEN  depending  on  what
+other streams have already been opened:
+
+On the EIM (ACIA number = 0), if the other ACIA channel
+is already in use then the baud rates must be the same,
+or   an  error will result. The same error  number  may
+also be  given if a stream is open which uses the Sound
+or the Analogue device driver, as these make  extensive
+use of the EIM clock circuit.
+
+On  any Network Module, once  one ACIA channel has been
+opened, an error will result if another ACIA stream  is
+opened using different baud rates.
+
+On   the  EIM, if one  channel  is opened  in  buffered
+mode,  the other channel may not be opened at all.  (In
+early  releases,  this  does  not result  in  an  error
+message,  but    its    use    is    not  recommended.)
+
+If   another  stream  is  already open to the  selected
+ACIA,  the  open  will fail with an  error.  (On  early
+releases, a  weaker check is made: if another stream is
+open  to the selected ACIA  in buffered mode ,  then  a
+new  stream   cannot  be opened to  the  same  ACIA  in
+buffered mode.)
+
+Some  checks are made in the OPEN which depend  on  the
+operating environment:
+
+If   an  ACIA  is selected  on  a Network Module  which
+is  not connected, or has its select switch set to  the
+wrong value, then an error will result (except on early
+releases).
+
+When  using  the  PIM  software,  ie  the  EIM  is  not
+connected,   the   ACIA  number  must  be   1   or   2.
+
+When    using  the  EIM,  the  default  values  of  the
+parameters are
+
+T9600 R9600 L80 *1 A0 D8 S1 PZ H
+
+When  the  Peripheral  Interface Module is used without
+the  EIM, the default values are
+
+T9600 R9600 L80 *0 A1 D8 S1 PZ H
+
+INPUT
+
+Both   device  type 16 and 17  may be used  for  input.
+Device  type 16, when the ACIA number is 0, will  input
+data  from    the    LP  connection  on  the  expansion
+interface;  device  type  17  will input from  the  V24
+connection.  For   ACIA numbers 1 to 32,  there  is  no
+difference  on   INPUT between device types 16 and  17.
+
+1)   Unbuffered mode ("*0"):  The ACIA status  register
+is  read  until  either an error state or a  Read  Data
+Register Full condition is detected. The RTS line  will
+be  pulsed   low   while  this  poll  takes  place  for
+protocol-option N,  or   pulsed high for
+protocol-option  H.  The routine then returns  with  an
+error  number  or  the   data    read  from  the  ACIA.
+
+2)  Buffered mode: The next byte of data is taken  from
+the  buffer.   If  any error has  been detected by  the
+interrupt  service     routine   since    the  previous
+call to INPUT,  it  is reported instead of drawing data
+from    the  buffer,  even  though  it  may  have  been
+signalled at  a later time than when the next available
+byte   of  data   was actually read from the ACIA. When
+the buffer becomes  empty, the device driver will  wait
+until data is available.
+
+OUTPUT
+
+For   device   type  17,  and  for device type 16  when
+the  line length is zero,the data byte entered  to  the
+device  driver  is output as below. For device type 16,
+with a non-zero line length, newline (0DH) is  expanded
+to  newline,  line-feed (0D0AH), tab (09H) is  expanded
+to  at  least one space and sufficiently many  to  take
+the next   character printed to a multiple of 8 (or, if
+this  would take the  printer past the end of a line, a
+newline  and   line-feed    are output), and a  newline
+and  line-feed  are inserted  at  the end of each line.
+The   device  driver  checks  whether  the  next   byte
+following  an   inserted line-feed is a line-feed,  and
+if  this   is   so    one   line-feed   is  suppressed.
+
+1) Unbuffered mode ("*0"):
+
+The  ACIA status register is read until a Transmit Data
+Register  Empty  (TDRE) condition is found.  This  will
+occur  when   the  ACIA has begun to transmit the  last
+byte  of  data  written  to  it, provided the CTS  line
+is then low. Depending on the protocol-option selected,
+RTS  may be set low for the duration of this poll; this
+is  the  case when option H is selected. The data  byte
+entered  to  OUTPUT  is then written to the  ACIA  data
+register.
+
+2) Buffered Mode:
+
+The  data  is entered  into  the associated buffer  and
+the  device driver returns. If the buffer is full,  the
+routine waits  until there is room to insert the  byte.
+
+CLOSE
+
+If   the  stream was  opened  for buffered output,  and
+data  is  still in the buffer for output,  the  routine
+will  wait  for    the  buffer  to  be  emptied  before
+completing  the close. The  user may press the STOP key
+to   force  an  immediate  close  when  this   happens.
+
+Effect  of  selecting  immediate return
+
+In  the INPUT routine, instead of waiting for the  ACIA
+to become ready or for the buffer to contain data,  the
+device driver will return with error 208. In the OUTPUT
+routine,  instead   of waiting for the ACIA  to  become
+ready or for room in the buffer, the device driver will
+return with error 210. In the CLOSE routine, instead of
+waiting for the buffer to empty, the routine will close
+down   the   buffer immediately, but no  error  message
+will be given.
+
+Summary of errors
+
+The   ACIA  device  drivers   are liable to return  the
+following errors:
+
+Error 109 Attempt was made to read following OPEN  OUT#
+
+Error   120   Syntax   error   in   parameter   string
+
+Error  206   (System  error)  Buffer   not   available
+
+Error 207 ACIA or buffer already in use
+
+Error 208  ACIA  not ready for output OR  buffer  full
+
+Error 209 Cannot use LP and V24 on EIM unless both  are
+unbuffered
+
+Error 210  ACIA  not ready for input OR  buffer  empty
+
+Error 211 Baud rates differ from ACIA aready  open  on
+same module
+
+Error 212 Cannot use baud rate over 19200 on EIM (early
+releases)
+
+Error 213 Cannot use protocol N for buffered operation
+- use N*0
+
+Error 214 Illegal ACIA or buffer number
+
+Error 215 Illegal combination of Data bits, Stop  bits,
+and parity
+
+Error 216 ACIA frame error
+
+Error  217  ACIA  overrun  error  OR  buffer   overrun
+
+Error 218 ACIA parity error
+
+Error 219 ACIA loss-of-carrier error
+
+Error 220  ACIA  number is on a  module  that  is  not
+connected
+
+EXAMPLES
+
+1 Using a printer
+
+To open a 2400 baud printer:
+
+OPEN OUT#16,16,"T2400"
+
+If   possible,  the printer should be set up to run  at
+9600  baud,  as this is the default baud rate,  so  one
+need enter only
+
+OPEN OUT#16,16
+
+and   in  any case it is  best  to run the  printer  as
+fast as possible.
+
+Now    ensure  the   printer   is connected to  the  LP
+connection on the EIM, and switch it on.
+
+To   list   a  program  to  the  printer,  then   enter
+
+LIST #16
+
+or
+
+LIST #16,100 - 300
+
+to list lines 100 to 300.
+
+To print data, enter
+
+PRINT    #16,"NewBrain    expansion    LP    interface"
+
+PRINT #16,2+3,a$(4),p1
+
+etc.   The syntax is the same  as PRINT to the  screen,
+but  the  TAB  function is equivalent to  a  comma  (,)
+separator regardless of the TAB value. In each case,  a
+single TAB control  (character 9) is issued by BASIC to
+the  device driver, which then issues enough spaces  to
+advance  the  printer to the start of the  next  print-
+zone. The zone width  is eight columns.
+
+2 Line length
+
+The  printer  device driver may be used with  wider  or
+narrower paper  than  the default  of  80 columns.  The
+user  may then  set the number of printable  charactets
+that can  be  output before a newline and line-feed are
+inserted by using a length-option in the OPEN parameter
+string:
+
+OPEN   #16,16,"L120"   :REM   line   length   is    120
+
+OPEN #16,16,"L60" :REM line length is 60
+
+Note   that  specifying  a  line length for device type
+17   does  not  result in a syntax error;  however,  no
+significance  is  then  attached to  the  line  length.
+
+3 Control codes
+
+Control  codes can be sent to the printer using  device
+16 by means of a simple PUT from BASIC:
+
+PUT #16,12 :REM form feed
+
+PUT #16,27,30 :REM an escape sequence
+
+PUT#16,3,12,18,56,84,56,144,96,3    :REM   a    control
+sequence
+
+However,  care  must then be taken to ensure  that  the
+device  driver  does not insert extra codes in  such  a
+sequence due to the  auto matic insertion and expansion
+features.   At   times when it  is important to  output
+codes to the printer without having automatic insertion
+and  expansion   applied  to  newlines  and  TABs,  for
+example  when  a graphics  printer is used, the  stream
+may be opened with a line length of zero:
+
+OPEN #16,16,"L0"
+
+The   stream  will then perform in the same  way  as  a
+stream opened using device type 17. The only difference
+will  be that the  LP connection on the EIM is used. If
+this  is done,  however,  the user becomes  responsible
+for  providing  all necessary  control codes,  such  as
+line feed  after newline, directly:
+
+PRINT #16,a$: PUT #16,10
+
+4 Buffered communication
+
+By  default, a stream  operating through device type 16
+or   17  uses  a buffer of  256  characters,  including
+expanded  TABs   and automatically inserted line  feeds
+and  newline   codes.  The size of this buffer  can  be
+specified  as  a  multiple of  256 when the  stream  is
+opened:
+
+OPEN    OUT#16,16   :REM   buffer    5120    characters
+
+OPEN  #17,17,"*4" :REM buffer 1024 characters each  way
+
+Opening a stream using OPEN OUT# means that it is  then
+only  available  for output. This  form of OPEN  should
+always be adopted when using device 16 or 17 to operate
+a  printer.  If OPEN  IN# is used, then the  stream  is
+opened  for two-way communication, and two  independent
+buffers are created, one for input and one for  output.
+
+5 Unbuffered communication
+
+The   OPEN  parameter   string  may  specify  a  buffer
+length of zero:
+
+OPEN  OUT#16,16,"*0"  :REM  unbuffered  printer  output
+
+OPEN  #17,17,"*0" :REM unbuffered input-output  on  V24
+
+to    avoid   the   automatic   buffering.   Unbuffered
+communication  must be  specified when both  device  16
+and device 17 are to be open on the EIM simultaneously,
+also  when using the NewBrain to NewBrain protocol,  eg
+
+OPEN#17,17,"N*0"
+
+6 Network Module
+
+To  open an input  communications stream on CH7 of  the
+first  Network Module (ie select switch set to 0) using
+default options:
+
+OPEN #8,17,8,"A8"
+
+To  open a bi-directional communications stream on  CH0
+of  the     first   Network   Module, communicating  at
+4800  baud  with an unexpanded NewBrain  in  unbuffered
+mode:n
+
+OPEN #1,17,1,"A1T4800R4800N*0"
+
+To  open  an output printer stream on CH2 of the  third
+Network  Module  running  at  9600  baud  with  a  1024
+character buffer:
+
+OPEN OUT#27,16,27,"A27*8"
+
+In  each of these examples,  the stream number has been
+chosen  to be the same as the ACIA number, to  make  it
+easier to  remember later which stream is being used on
+which   channel.  The   port number which precedes  the
+parameter  string in the OPEN has been chosen to  match
+the  stream number to make sure that each device  type,
+port number  pair will be unique.
+

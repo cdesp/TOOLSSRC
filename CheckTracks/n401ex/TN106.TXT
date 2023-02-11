@@ -1,0 +1,38 @@
+ SSEIO documention TN106
+
+1) Introduction
+
+SSEIO is a Simple Screen  Editor contained in the  disk
+controller  ROM  and is configured as device 18. It  is
+only  available   under  the  paged  operating  system,
+although  it  is  used by the  32K CPM  system.  It  is
+faster  than the normal screen editor and  consequently
+is not as powerful.
+
+2) Opening SSEIO
+
+The    device   will  ignore   any parameter string  on
+OPEN. There is no difference between opening for  input
+and  opening    for  output. A 25 lines by  80  columns
+screen will  be  created   and cleared. Inputting  from
+SSEIO  will   yield  an  error  in  PIOS  (Paged  Input
+Output System).
+
+3) Outputting to SSEIO
+
+Non-control     characters     are  displayed  and  the
+cursor  advanced.  When  the 80th  character  has  been
+written  to  a  line, the cursor remains  on  the  last
+character,  and  becomes   a block  cursor.  Subsequent
+characters   are   printed    on     the   next   line.
+
+4) Screen Control codes
+
+See TN102 section 4.
+
+CSP 010683, GFG 301285
+
+
+
+
+

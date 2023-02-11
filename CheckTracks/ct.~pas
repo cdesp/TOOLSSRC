@@ -1,0 +1,793 @@
+{
+//==========================================
+//    $Date: 7/6/2004 - 5:21:15 μμ $
+//==========================================
+//        (C) Hypersoft S.A. 
+// Τμήμα Ανάπτυξης Εφαρμογών Λογισμικού 
+//          Δεσποινίδης Χρήστος
+//==========================================
+}
+//--END HS INFO--
+unit ct;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, ExtCtrls, ComCtrls;
+
+type
+
+  THeadr=Record
+     b1:Byte;
+     b2:Byte;
+     b3:Byte;
+     b4:Byte;
+     b5:Byte;
+     b6:Byte;
+     b7:Byte;
+     b8:Byte;
+  End;
+  PHeadr=^Theadr;
+
+  TForm1 = class(TForm)
+    Panel1: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    Button2: TButton;
+    Button3: TButton;
+    RadioGroup1: TRadioGroup;
+    Label5: TLabel;
+    memData: TMemo;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    memText: TMemo;
+    TabSheet2: TTabSheet;
+    Edit5: TEdit;
+    ListBox1: TListBox;
+    ListBox2: TListBox;
+    ListBox3: TListBox;
+    ListBox4: TListBox;
+    TabSheet3: TTabSheet;
+    memDir: TMemo;
+    Show: TButton;
+    Button1: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    procedure ReadHeader;
+    procedure Button3Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure memTextClick(Sender: TObject);
+    procedure memDataClick(Sender: TObject);
+    procedure ListBox1Click(Sender: TObject);
+    procedure ShowClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+  private
+    FCurrent: Integer;
+    MaxDisks: Integer;
+
+    procedure SetCurrent(Value: Integer);
+    procedure SetInfo;
+    procedure ShowDirectory;
+    procedure FillAluTable;
+    procedure MakeDisk(Dir: String);
+    procedure WriteDisk(nm: String);
+    { Private declarations }
+  public
+    procedure ReadData;
+    procedure FillSystemParams;
+    property Current: Integer read FCurrent write SetCurrent;
+    { Public declarations }
+  end;
+
+function GetFiles(path, mode : String; list : TStrings): Boolean;
+
+function GetFileSizeHS(const FileName : String) : LongInt;
+
+var
+  Form1: TForm1;
+  BufH:Array[0..7] of Byte;
+  SysParams:Array[0..3,0..36] of Byte;
+  Buff:Array[0..512] of byte;
+  hd:PHeadr;
+
+  DiskBuf:Array[0..819200] of byte;
+
+
+implementation
+uses math;
+
+Function GetOffsetBySdTrack(Sd:Byte;Track:Integer;Sector:Byte):Integer;
+Begin
+  Result:=(Track*2+Sd)*10*512;//Sectors per Track
+  //Odd Tracks is side 1
+  //Even Tracks is Side 0
+  //total virtual tracks ar 160 = 80 * 2 sides
+End;
+
+Function GetOffsetByAlu(AluC:Integer):Integer;
+Begin
+  Result:=10240{SyStem Tracks}+Aluc*4096;
+End;
+
+Procedure GetSdTrackSecFromAlu(Aluc:integer;Var Sd:Byte;VAr Track:Integer;Var Sector:Byte);
+Var Offs,t:Integer;
+Begin
+  Offs:=GetOffsetByAlu(Aluc);
+  t:=Offs div 512; //Offset Sectors
+  Track:=Offs div 10; //Offset Track
+  Sector:=t-(Track*10);
+  if track mod 2<>0 then
+   Sd:=1
+  else
+   Sd:=0;
+End;
+
+function GetFiles(path, mode : String; list : TStrings) : Boolean;
+var
+  SearchRec : TSearchRec;
+begin
+  // Επιστρέφει αρχεία η φακέλους από ένα path σε ένα StringList
+
+  Result := False;
+  if mode = 'Directory' then 
+  begin
+    FindFirst(path + '\*', faDirectory, SearchRec);
+    FindNext(SearchRec);                   // Προσπερνά τις 2 τελείες (..)
+    while FindNext(SearchRec) = 0 do 
+    begin
+      if (SearchRec.Attr and faDirectory) = faDirectory then
+        // Ελέγχει αν είναι Κατάλογος
+        list.Add(SearchRec.Name);
+    end;
+    Result := True;
+  end 
+  else if mode = 'Files' then 
+  begin
+    FindFirst(path + '\*.*', faAnyFile, SearchRec);
+    FindNext(SearchRec);
+    while FindNext(SearchRec) = 0 do
+      if not ((SearchRec.Attr and faDirectory) = faDirectory) then
+        // Ελέγχει αν δεν είναι Κατάλογος
+        list.Add(SearchRec.Name);
+    Result := True;
+  end;
+  FindClose(SearchRec);
+end;
+
+function GetFileSizeHS(const FileName : String) : LongInt;
+var
+  SearchRec : TSearchRec;
+begin
+  try
+    if FindFirst(ExpandFileName(FileName), faAnyFile, SearchRec) = 0 then
+      Result := SearchRec.Size
+    else 
+      Result := -1;
+  finally
+    SysUtils.FindClose(SearchRec);
+  end;
+end;
+
+
+{$R *.DFM}
+
+procedure TForm1.ReadHeader;
+Var F:File Of Byte;
+    pth,fn,s:String;
+    b:Byte;
+    i:Integer;
+begin
+ pth:=ExtractFilePath(Application.Exename);
+ s:='';
+ fn:='D_0_Y';
+ Case RadioGroup1.ItemIndex of
+  0: fn:='D_0_Y';
+  1: fn:='D_1_Y';
+ End;
+
+ AssignFile(F,pth+fn);
+ try
+   try
+    Reset(F);
+    Seek(F,Current*(512+8));
+    For i:=1 to 8 do
+    Begin
+     Read(F,b);
+     BufH[i-1]:=b;
+     s:=s+Inttostr(b)+' ';
+    End;
+
+   Except
+
+   End;
+ Finally
+  CloseFile(f);
+ End;
+ Edit5.text:=s;
+ SetInfo;
+ ReadData;
+ FillSystemParams;
+end;
+
+procedure TForm1.SetInfo;
+Begin
+  Edit2.text:=Inttostr(hd.b1);//Cylinder
+  Edit1.text:=Inttostr(hd.b2);//Side
+  Edit3.text:=Inttostr(hd.b3); //Track
+  Edit4.text:=Inttostr(hd.b5);//Sector
+End;
+
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+ If Current<29 then
+  Current:=Current+1;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+ If Current>0 then
+  Current:=Current-1;
+end;
+
+procedure TForm1.SetCurrent(Value: Integer);
+begin
+  if FCurrent <> Value then
+  begin
+    FCurrent := Value;
+    Label5.Caption:=Inttostr(Value);
+    ReadHeader;
+  end;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+ Current:=0;
+ ReadHeader;
+end;
+
+procedure TForm1.RadioGroup1Click(Sender: TObject);
+begin
+  Current:=0;
+  ReadHeader;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+ hd:=@BufH[0];
+end;
+
+procedure TForm1.ReadData;
+Var F:File Of Byte;
+    pth,fn,s,st:String;
+    b:Byte;
+    i,j,d,k:Integer;
+    IsParams:boolean;
+begin
+ pth:=ExtractFilePath(Application.Exename);
+ memdata.lines.Clear;
+ memtext.lines.Clear;
+ fn:='D_0_Y';
+ IsParams:=true;
+ Case RadioGroup1.ItemIndex of
+  0: fn:='D_0_Y';
+  1: Begin
+      fn:='D_1_Y';
+      IsParams:=False;
+     End;
+ End;
+
+ If IsParams and (Current>0) then
+  IsParams:=False;
+
+ AssignFile(F,pth+fn);
+ try
+   try
+    Reset(F);
+    Seek(F,Current*(512+8)+8);
+    s:='    ';
+    For i:=0 to 31 do
+     s:=s+inttoHex(i,2)+' ';
+    memdata.lines.add(s);
+    memText.lines.add(s);
+    s:='   ';
+    For i:=0 to 31 do
+     s:=s+'===';
+    memdata.lines.add(s);
+    memText.lines.add(s);
+
+    k:=0;d:=0;MaxDisks:=0;
+    For j:=0 to 15 do
+    Begin
+     if j<8 then
+     Begin
+      s:=Inttohex(j*32,2)+') ';st:=Inttohex(j*32,2)+') ';
+     End
+     Else
+     Begin
+      s:=Inttohex(j*32,2)+')';st:=Inttohex(j*32,2)+')';
+     End;
+
+
+     For i:=0 to 31 do
+     Begin
+      Read(F,b);
+      Buff[j*32+i]:=b;
+      
+      If ISParams and (MaxDisks=0)  then
+       MaxDisks:=b
+      Else
+      If IsParams and (d<MaxDisks) then
+      Begin
+       SysParams[d,k]:=b;
+       Inc(k);
+       if k>36 then
+       Begin
+         k:=0;
+         Inc(d);
+       End;
+      End;
+
+
+      s:=s+InttoHex(b,2)+' ';
+      If (B>31)  then
+       st:=st+chr(b)+' '+' '
+      Else
+       st:=st+'. '+' ';
+     End;
+     memdata.lines.add(s);
+     MemText.Lines.Add(st);
+    End;
+    memdata.SelStart:=0;
+    Memdata.SelLength:=2;
+    MemText.SelStart:=0;
+    MemText.SelLength:=2;
+
+   Except
+
+   End;
+ Finally
+  CloseFile(f);
+ End;
+end;
+
+procedure TForm1.memTextClick(Sender: TObject);
+begin
+    memdata.SelStart:=memText.SelStart;
+    memText.SelLength:=1;
+    Memdata.SelLength:=2;
+end;
+
+procedure TForm1.memDataClick(Sender: TObject);
+begin
+    memText.SelStart:=memdata.SelStart;
+    memText.SelLength:=1;
+    Memdata.SelLength:=2;
+end;
+
+procedure TForm1.FillSystemParams;
+Var lb:TListBox;
+
+  Procedure AddToLb(bno:Integer;s:String;Value:Integer);
+  Begin
+    Case Bno Of
+      37:s:='Gap (Format)';
+      36:s:='Seek rate (ms)';
+      35:s:='Flags';
+      34:s:='SecSize(0=512,1=1024)';
+      33:s:='Gap';
+      32:s:='Drive';
+      31:s:='TMP/Tracks H';
+      30:s:='TMPTracks L';
+      29:s:='Host Other H';
+      28:s:='Host Other L';
+      27:s:='Sectors/Track';
+      26:s:='SECSHF-LOG(SECSIZE/128)';
+      25:s:='SECMSK-(SECSIZE/128-1)';
+      24:s:='No Of Sides';
+      23:s:='Tracks/Side H';
+      22:s:='Tracks/Side L';
+    End;
+    lb.items.Add(s+' : '+Inttostr(Value));
+  End;
+
+  Procedure Info(s:String);
+  Begin
+    lb.items.Add(s);
+  End;
+
+
+Var i,j:integer;
+
+begin
+ For i:=0 to MaxDisks-1 do
+ Begin
+    lb:=TListBox(FindComponent('ListBox'+Inttostr(i+1)));
+    Info('=================================');
+    AddToLb(0,'Disk',i+1);
+    Info('---------------------------------');
+    For j:=0 to 36 do
+    Begin
+      AddToLb(j+1,'B_'+Inttostr(j+1),SysParams[i,j]);
+    End;
+ End;
+end;
+
+type
+  TListBoxCrack=Class(TCustomlistBox);
+
+procedure TForm1.ListBox1Click(Sender: TObject);
+Var lb:tListBox;
+    i:integer;
+begin
+   For i:=0 to Maxdisks-1 do
+   Begin
+      lb:=TListBox(FindComponent('ListBox'+Inttostr(i+1)));
+      If Lb=Sender then
+       Continue;
+      lb.itemIndex:=TListBox(Sender).ItemIndex;
+
+   End;
+end;
+
+Type TDirEntryNormal=Record
+      Userno:Byte;
+      FName:Array[0..7] of char;
+      Ext:Array[0..2] of char;
+      Extent:Byte;
+      No13:Byte;
+      No14:Byte;
+      NoExtend:Byte;
+      ALU:Array[0..15] of Byte;
+     End;
+     PDirEntryNormal=^TDirEntryNormal;
+
+Const
+   ALUSize=4096;
+   ALUSectors=8;
+   ALUDir=0; //Side=0,Track=1,Sect(1-8)
+
+   ALUStart=1;//Side=0,Track=1,Sect(9-10)
+              //Side=1,Track=1,Sect(1-6)
+
+Type
+   TAluTable=Record
+              Side:Byte;
+              TrackNo:Integer;
+              SectorNo:Byte;
+             End;
+
+Var AluTable:Array[0..200] of TAluTable;
+
+
+procedure TForm1.FillAluTable;
+Var Aluc:Integer;
+    Sd:Integer;
+    Track:Integer;
+    Sect:Integer;
+
+Var i:integer;
+Begin
+
+   Sd:=0;
+   Track:=1;
+   Sect:=1;
+
+   For Aluc:=0 to 197 do
+   Begin
+    AluTable[Aluc].Side:=sd;
+    AluTable[Aluc].TrackNo:=Track;
+    AluTable[Aluc].SectorNo:=Sect;
+    For i:=1 to ALUSectors do
+    Begin
+     Inc(Sect);
+     If Sect=11 then
+     Begin
+       Sect:=1;
+       If Sd=0 then
+        sd:=1
+       Else
+       Begin
+         sd:=0;
+         inc(Track);
+       End;
+     End;//IFSect=11
+     if track=81 then Break;
+    End;//for i=1 to alusecs
+   End;//For Aluc
+  // ShowMessage(Inttostr(Aluc)+' total alocation units');
+End;
+
+procedure TForm1.ShowDirectory;
+Var i,j:integer;
+    DirEnt:PDirEntryNormal;
+
+   Procedure LocateSectForAlu(Alu:Integer;Var Side,TrackNo,SectorNo:Integer);
+   Begin
+     Side:=AluTable[Alu].Side;
+     TrackNo:=AluTable[Alu].TrackNo;
+     SectorNo:=AluTable[Alu].SectorNo;
+   End;
+
+   Procedure Printentry(Fname:String='');
+   Var l:String;
+       aa,t:Integer;
+       Sd,tr,Sec:Integer;
+   Begin
+    aa:=I*16+j+1;
+    l:=Inttostr(aa);
+    If Aa<10 then
+     l:=l+' ) '
+    Else
+     l:=l+') ' ;
+    If Fname='' then
+    Begin
+     l:=l+DirEnt^.FName+'.'+DirEnt^.Ext+' ';
+     l:=l+' '+Inttostr(DirEnt^.NoExtend)+'   ';
+     For t:=0 to 15 do
+      if DirEnt^.ALU[t]<>0 then
+       l:=l+Inttostr(DirEnt^.ALU[t])+' ';
+
+     For t:=Length(l) to 40 do
+       l:=l+' ';
+       
+     For t:=0 to 15 do
+      if DirEnt^.ALU[t]<>0 then
+      Begin
+       LocateSectForAlu(DirEnt^.ALU[t],Sd,tr,Sec);
+       l:=l+Format('(Sd:%d,Tr:%d,Sc:%d) ',[Sd,tr,Sec]);
+      End;
+
+    End
+    Else
+     l:=l+Fname;
+    Memdir.lines.add(l);
+   End;
+
+   Procedure ShowEntry(no:Integer);
+   Var StEn:Integer;
+       k:Integer;
+       FName,Ext:String;
+       UserNo:Integer;
+   Begin
+    Sten:=j*32;
+    Userno:=Buff[sten];
+    If UserNo<>$e5 then
+    Begin
+     Case UserNo of
+      0..15:
+       Begin
+         DirEnt:=@Buff[sten];
+         Printentry;
+       End;
+      16-$1f:;//Password  $10+Userno
+      $20:;//Label
+      $21:;//DateTime Stamp
+     End; 
+    End
+    Else
+    Begin
+      Printentry('Empty Entry');
+    End;
+
+   End;
+
+Var hdr:String;
+Begin
+  FillAluTable;
+  hdr:='A/A FileName Ext Recs ALUnits(0..15)';
+  memdir.Clear;
+  memdir.lines.Add(hdr);
+  MemDir.lines.add('=== ======== === ==== ===================');
+
+  For i:=0 to 7 do
+  Begin
+    Current:=10+i;  //track 1 sectors 0-7
+    For j:=0 to 15 do
+     ShowEntry(j);
+
+  End;
+
+End;
+
+procedure TForm1.ShowClick(Sender: TObject);
+begin
+ ShowDirectory;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+ FillAluTable;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+Var F1:File Of Byte;
+    F2:File Of Byte;
+    F3:File Of Byte;
+    fn1,fn2,fn3:String;
+    pth:String;
+    i:Integer;
+    b:Byte;
+begin
+  pth:=ExtractFilePath(Application.Exename);
+  fn1:='D_0_N';
+  fn2:='D_1_N';
+  fn3:='System.Dsk';
+  AssignFile(F1,pth+fn1);
+  AssignFile(F2,pth+fn2);
+  AssignFile(F3,pth+fn3);
+ try
+   try
+    Reset(F1);
+    Reset(F2);
+    ReWrite(F3);
+    For i:=1 to 512*10 do //1st track from Side 0
+    Begin
+     Read(F1,b);
+     Write(f3,b);
+    End;
+    For i:=1 to 512*10 do //1st track from Side 1
+    Begin
+     Read(F2,b);
+     Write(f3,b);
+    End;
+
+   Except
+
+   End;
+ Finally
+  CloseFile(f1);
+  CloseFile(f2);
+  CloseFile(f3);
+ End;
+
+
+end;
+
+
+procedure TForm1.MakeDisk(Dir: String);
+Var FileList:tStringlist;
+    i:integer;
+    DirEntryNo,Alocs:Integer;
+    DirEnt:TDirEntryNormal;
+
+    Procedure LoadFile(Fn:String;Offs,sz:Integer);
+    Var f:File Of Byte;
+        p:Pchar;
+        tr:Integer;
+    Begin
+      Assignfile(f,Fn);
+      Reset(F);
+      p:=@DiskBuf;
+      BlockRead(f,p[Offs],sz,tr);
+      CloseFile(f);
+    End;
+
+    Procedure WriteDirEntry;
+    Var offs:Integer;
+        p:PChar;
+        t:integer;
+    Begin
+     If DirEntryNo>128 then //too many entries
+      Exit;
+     Offs:=GetOffsetByAlu(0);
+     offs:=Offs+DirEntryNo*32;
+     p:=@DirEnt;
+     For t:=0 to 31 do
+      DiskBuf[Offs+t]:=Byte(p[t]);
+     Inc(DirEntryNo);
+    End;
+
+    Procedure AddEntry(fn:String);
+    Var fsz:Integer;
+        StartAloc,EndAloc:Integer;
+        Offs:integer;
+
+        Fname:String;
+        Ext:String;
+        t:integer;
+    Begin
+      If Alocs>198 then exit; //Disk Full
+
+      fSz:=GetFileSizeHS(Dir+fn);
+      if fsz=-1 then exit;
+
+      StartAloc:=Alocs;
+      Alocs:=Alocs+Fsz div 4096;
+      If (Fsz>4096) and (Fsz mod 4096<>0) then
+        Inc(Alocs);
+      EndAloc:=Alocs;
+      Inc(Alocs);
+      Offs:=GetOffsetByAlu(StartAloc);
+      //todo:Load File At Offs
+      LoadFile(Dir+fn,Offs,Fsz);
+      //Fill DirEntryStruct
+      DirEnt.Userno:=0;
+      t:=Pos('.',fn);
+      If t>0 then
+      Begin
+        Fname:=Copy(fn,1,t-1);
+        Ext:=Copy(fn,t+1,maxint);
+      End
+      Else
+      Begin
+        fname:=fn;
+        ext:='';
+      End;
+
+      For t:=1 to Max(Length(Fname),8) do
+       DirEnt.FName[t-1]:=fname[t];
+      For t:=1 to Max(Length(ext),3) do
+       DirEnt.Ext[t-1]:=ext[t];
+      DirEnt.NoExtend:=Fsz div 128;
+      if (Fsz>128) and (fsz mod 128<>0) then
+       DirEnt.NoExtend:=DirEnt.NoExtend+1;
+      For t:=0 to 15 do
+       DirEnt.ALU[t]:=0;
+      For t:=StartAloc to EndAloc do
+      Begin
+        DirEnt.ALU[t-StartAloc]:=t;
+      End;
+      //Todo:WriteToDirEntry;
+      WriteDirEntry
+    End;
+
+    Procedure LoadSyStem;
+    Var pth:String;
+        f:File Of Byte;
+        t:Integer;
+    Begin
+     pth:=ExtractFilePath(Application.Exename);
+     AssignFile(F,pth+'System.Dsk');
+     Reset(f);
+     BlockRead(f,DiskBuf,10240,t);
+     CloseFile(f);
+    End;
+Begin
+  Alocs:=1;
+  DirEntryNo:=0;
+  //0.todo: fill buff with $e5
+  For i:=0 to 819200 do
+    DiskBuf[i]:=$E5;
+
+  //LoadSystem
+  LoadSystem;
+  //1.Get Directory Files
+  FileList:=tStringlist.Create;
+  GetFiles(Dir,'Files',FileList);
+  For i:=0 to Filelist.count-1 do
+  Begin
+
+   AddEntry(Filelist[i]);
+  End;
+  //2.Make Directory and Put Files
+End;
+
+procedure TForm1.WriteDisk(nm:String);
+Var f:File OF Byte;
+Begin
+  AssignFile(f,nm);
+  Rewrite(f);
+  BlockWrite(f,DiskBuf,819200);
+  CloseFile(f);
+End;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+  MakeDisk(ExtractFilePath(Application.exename)+'n401\');
+  WriteDisk(ExtractFilePath(Application.exename)+'n401.dsk');
+end;
+
+end.

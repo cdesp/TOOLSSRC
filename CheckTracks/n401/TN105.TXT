@@ -1,0 +1,76 @@
+ KBBFIO documentation TN105
+
+1) Introduction
+
+KBBFIO  is configured as  device 19 in the paged memory
+operating  system and is only available when  the  disk
+controller  module  is  connected. Its function  is  to
+provide an  enhanced  keyboard driver with an interrupt
+buffer,  and  the  ability  to  use  the  CONTROL/0  to
+CONTROL/9 as additional function keys.
+
+2) OPEN
+
+Opening  for input has the  same effect as opening  for
+output.  The   port   number is ignored.   A  parameter
+string  containing   a decimal number may be  given  to
+select  the  size of buffer.  If this is zero error 110
+will  be returned. Otherwise a buffer will  be  created
+out  of   that  number  of 256  byte  blocks  from  the
+interrupt  buffer  management system. If  no  parameter
+string  is   given then a default  buffer size  of  256
+bytes  is   used.  An attempt to open device  19  twice
+will fail  as  the   interrupt buffer management system
+will raise a fault.
+
+3) INPUT
+
+When  reading  from the device the characters  will  be
+read  from  the buffer according and  returned.  If  no
+character  is available the device will wait untl a key
+is pressed. If a 0 is returned this indicates an escape
+and  the device should be read again. If a further 0 is
+returned   this indicates either a genuine character  0
+or alternatively  an invalid keyboard combination. If a
+0  is  followed  by  90H  to  97H,  8EH  or  8FH,  this
+indicates  that  CONTROL 0 to 9 respectively  has  been
+pressed.  On some  keyboards (e.g. English) CONTROL and
+'*' will  yield  a 0  followed  98H.
+
+4) OUTPUT
+
+Outputting   to  device  19  will change  the  keyboard
+mode  as  in device 5 and 6. However in this case  bits
+7, 5 and 4 are reserved for expansion, and bit 6 is  an
+additional   TTYCAPS     bit.  This  will  effect   any
+characters  which  are already in the  buffer,  because
+characters are  stored untranslated in the buffer. This
+does   not   effect   the  keyboard modes of  any  open
+device  5  or   6  stream  nor  screen  editors  common
+keyboard mode byte.
+
+5) CLOSE
+
+Closing  device 19 will deallocate the buffer. Any data
+in it is lost.
+
+6) Polling
+
+The status of the buffer may  be tested by testing  bit
+NRIST  (2)  of the appropriate byte in the system  page
+status table.  If this is 0 a character is available in
+the buffer and can be returned by device 19. If it is 1
+the buffer is empty.  This method of polling provides a
+much   more   efficient    facility  than  afforded  by
+device 6.
+
+7) Interaction with devices 5 & 6
+
+Keyboard   data can still be read using devices 5 and 6
+and the screen editor, without removing data from  that
+which can be read by device 19. Thus keyboard input can
+be read twice  over, and therefore extra care should be
+taken  if either device 5 or 6 is open with device  19.
+
+CSP 130583, GFG 301284
+

@@ -1,0 +1,27 @@
+NewBrain-gebruikersgroep
+Postbus 4494
+1009 AL  Amsterdam
+
+sofwarebibliotheek deel N401
+
+NUMMER  SIZE  NAAM             INHOUD
+
+              -CATALOG.401     INHOUD N401: Technical Notes
+
+N401.01    3K  TECHNOTE.TXT    Overzicht van alle verschenen Techn.Notes
+N401.02    4K  TN018.          Production of user defined characters
+N401.03   11K  TN101.          CP/M utilities
+N401.04   10K  TN102.          CP/M system
+N401.05   12K  TN103.          DISCIO system
+N401.06   13K  TN104           CONFIGURE program
+N401.07    3K  TN105           KBBF IO
+N401.08    2K  TN106           SSE IO
+N401.09   29K  TN107           Paged memory operating system
+N401.10   17K  TN108           System Page Description
+N401.11    4K  TN109           BASIC extensions with peripherals
+N401.12   16K  TN110           ACLPIO and ACVIO
+N401.13    6K  TN111           Centronics Printer Device Driver
+N401.14    3K  TN112           Z80 Port Device Driver
+N401.15   12K  TN113           Serial Memory Device Driver
+N401.16    2K  TN114           Analog Device Driver
+

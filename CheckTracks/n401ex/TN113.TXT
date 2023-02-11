@@ -1,0 +1,291 @@
+  SERIAL MEMORY DEVICE DRIVER TN113
+
+-  SMDD (NewBrain SILICON  DISC)
+
+NewBrain Expansion Interface Module.
+
+ GENERAL DESCRIPTION
+
+The  Serial  Memory Device  Driver implemented  in  the
+Expansion  Module  is a NewBrain version  of a  silicon
+disk,  allowing   areas  of  RAM  to  be  reserved  and
+referred  to  by   user-defined names. These areas  may
+be  used  in the same way as TAPE  files,  with  SERIAL
+access  to  the  DATA contained in each file; but  with
+immediate RANDOM access to  the start of each file,  by
+name.  The information in each file can be up to 8K  of
+program, text  or data; for larger programs, MERGE  two
+or  more  smaller files  into main memory. It  must  be
+stressed  that  there  is no  battery  backup,  so  all
+important  data  should be regularly dumped to tape  or
+disk as usual, in case of power loss. The interfaces to
+the    SMDD  routines  are standard  commands  -  OPEN,
+CLOSE,  INPUT,    LINPUT, PRINT, PUT, GET, SAVE,  LOAD,
+MERGE,  etc. using Device  number 20. Immediate  access
+is  available  to  ALL files and  at the same time! ...
+with MULTIPLE ACCESS to a SINGLE file through  separate
+streams!
+
+These  areas or objects may also be defined to be Input
+or  Output  ONLY.  Any invalid request to PRINT  to  or
+INPUT  from   these,  will NOT  return  an  error;  the
+program  should  take  care   to detect null inputs  if
+necessary.  Invalid   output   is   just   lost!  These
+facilities  are to  allow protection of data, as normal
+OPEN IN  and OPEN OUT  actually allow reading from  and
+writing to objects simultaneously.
+
+When   a   stream  is opened to  an object,  an  access
+pointer is assigned to that stream number and it is set
+initially to  the start of the object.
+
+Each   time   an access  is  made, whether  reading  or
+writing,  the  pointer is incremented; either  byte  by
+byte, (when PUT or GET); up to the next data  delimeter
+(comma),  (with  INPUT) and up  to Carriage Return  (on
+LINPUT and PRINT). NOTE: Take care when rewriting  over
+old data that the length is similar otherwise some data
+may  get corrupted. Multiple access to the same  object
+is  made by opening other streams to the object;  these
+will  have  their own independent pointers, which  will
+only  move   when specifically referenced. To  reset  a
+pointer  back  to  the start of the object, just  CLOSE
+and  re-OPEN the stream  number, to that object's  name
+again.
+
+Facilities to delete objects and obtain a directory are
+included.  The  size  of an object is  returned,  as  a
+number  of  256 byte blocks (i.e. S0004 = 1k)  and  the
+number of access pointers currently open to that object
+(R01  = 1 user). The first 16 characters of an object's
+name is displayed in the directory BUT REMEMBER this is
+a  TAPE type device ... File names can be  any  length!
+and  upper  and  lower case  letters  ARE  significant!
+
+A    bonus    for  anyone  needing    to  EXIT  to  CPM
+temporarily,  the  data or programs in  SMDD  RAM  will
+still be there on return to BASIC!
+
+ SMDD - TECHNICAL SPECIFICATION
+
+ OVERVIEW
+
+The   default   size of an  object created  using  SMDD
+(Device  20) is 1K. It is possible to specify from  256
+bytes  (1 block) up  to 8K (32 blocks) with safety. The
+normal   TAPE     size    and     filename   parameters
+("*4:FILEname")  apply,  the FIRST time the  object  is
+created  in RAM. This reserves that amount of space  as
+long  as  at least one item has been written to it  and
+CLOSEd.  The next OPEN request can specify whether  for
+INPUT  ($I) or OUTPUT ($O), or for PURGING ($P), - when
+ALL  pointers   into   that   object  are  closed.  The
+DIRECTORY  ($D)  facility can  use  default size and be
+OPENed the  first time e.g.
+
+  OPEN#20,20"$D:RAMDIRECTORY".
+
+The  full access to the directory is explained  in  the
+Environment Options.
+
+ OPEN
+
+OPEN   IN#  and OPEN OUT# are both equivalent to  OPEN#
+for  this device. All three may be used to display  the
+logic of the program.
+
+Parameters  used on OPEN are  as follows:
+
+1.  DEVICE  NUMBER.  The device number  of  the  Serial
+Memory Device is 20.
+
+2.  PORT NUMBER. No use is made of this by the  device.
+It  can, however, be used to create multiple copies  of
+the device.
+
+3.  PARAMETER  STRING. The parameter string  must  have
+
+parameter-string  ::=  [[  setup-option  ]*:][filename]
+
+setup-option    ::=   size-option    environment-option
+
+size-option ::= * number
+
+environment-option ::= $ (D | P | I | O)
+
+filename ::= [ASCII CHARACTER] {Any spaces occuring  in
+the setup   options   are   ignored. Spaces occuring in
+the   name  parameter  are interpreted as part  of  the
+name.}
+
+number  ::= 0..255 {from 1-32 blocks (*4 default) in  a
+standard 96K system}
+
+ ENVIRONMENT OPTION
+
+The   Environment  Option may  be one of four  letters:
+
+$D:   The object being opened  is to be initialised  to
+be  a  directory of the current memory objects.  It  is
+only  necessary  to  OPEN a  single  object  with  this
+parameter  as  it   dynamically updates itself as other
+objects are   created  or   purged   and streams opened
+or closed.  The Directory object may be created at  any
+time  before  being  used, all current objects will  be
+returned  in   order.   To   access  details  from  the
+Directory  it  is  necessary to set up a loop  such  as
+this:-
+
+1000 REM ** SMDD DIRECTORY **
+1010 OPEN#99,20,1,"$D:RAM-Directory"
+1020 ON ERROR GOTO 1050:REM End of File
+1030 LINPUT#99,d$:PRINT d$
+1040 GOTO 1030:REM Until all displayed
+1050 CLOSE#99
+
+An  EOF pointer is set at the end of SMDD reserved  RAM
+and an  end of file mark (04H,0DH) is written after the
+last byte  of the directory. The high water mark is set
+to  the  last byte  of the end of file marker.  If  the
+object  named  already exists, and there is  already  a
+stram  open to it, then the current attempt fails  with
+error 198.
+
+A    directory   entry   has    the  followng  format:-
+
+<   16  Byte  Name  >:  S  <Blocksize>:  R  <Reference>
+
+Where   <Blocksize>  is an  ASCII representation  of  a
+4-digit  hexadecimal  number,  and <References>  is  an
+ASCII  representation    of   a    2-digit  hexadecimal
+number.  Each directory entry is terminated by a single
+carriage return /  line feed (0DH/0AH).
+
+$P:   If,  when  this  stream  is closed, there  is  no
+other  stream  open to this object, then the object  is
+purged  from    the  system;   allowing  memory  to  be
+released and  re-used  if   an object is finished with.
+
+$I:  The object is only available for Input (GET, INPUT
+or  LINPUT).  If an output is attempted,  the  data  is
+discarded,  but  no  error   is reported and the access
+pointer is not moved.
+
+$0:  The  object is only available for output  (PUT  or
+PRINT)  Note  -  the access pointer is  NOT  moved  but
+driver  returns with 0CH  in the accumulator, if  input
+is attempted.
+
+ CLOSE
+
+Closing   a   stream to an  object removes the  pointer
+associated  with   that    stream   number   from  that
+object's  directory  reference. If the stream had  been
+OPENed with ($P)  as  the environment option, and  this
+was  the  final referenced stream, the object  will  be
+purged  from memory. If any object is created  by  OPEN
+but  no  output is sent to it then CLOSE will purge  it
+automatically.
+
+ INPUT
+
+Note   -  The first  input  after OPENing a  stream  is
+from  the start of the object. When an object is  first
+created, its contents are undefined, so reads from such
+areas  are  prohibited. As an object is written  to,  a
+separate   "High  Level"  pointer  is  maintained;  any
+attempt  to   read beyond it will return  error  number
+197.  (Directory   objects  return error  number  198).
+
+GET   ...  returns the  next  byte and  increments  the
+stream  pointer   by  one byte.  Used  to  access  data
+output using PUT.
+
+INPUT  ... returns data delimited by commas  (2CH),  or
+carriage  return   /  line  feed   (0DH/0AH).  Use  for
+numbers and   simple character strings.
+
+LINPUT ... returns a string  (of up to 255  characters)
+separated  by carriage return / line  feed. Both  INPUT
+and  LINPUT  increment the stream pointer to  the  next
+byte after the data returned.
+
+ OUTPUT
+
+This    section    explains    Data output by  PUT  and
+PRINT  (see  SAVE & LIST). When an object  is  created,
+data  needs    to    be  transferred  into  it,  to  be
+temporarily  stored   and   then manipulated.  The  two
+commands used are:-
+
+PUT   ...  to  put  single  bytes   of  data  into  RAM
+(returned with GET). The stream pointer is  incremented
+just beyond the byte just PUT.
+
+PRINT   (or  ?)  ...  to   write numbers, words or text
+strings into the object. It is safest to use a separate
+PRINT   statement for each item of data. Once again the
+stream pointer   is incremented. If an attempt to write
+data  past the end of  the physically reserved area  is
+made, error 193 will occur.
+
+ SAVE and LIST  (or SAVF)
+
+One  of the handiest uses of this device is to be  able
+to store several small programs in RAM developing  them
+in segments and testing, before putting them on disk or
+tape.   The    standard  interface of  OPEN  and  usual
+parameters  for  size  and  filenames  is  used,   then
+SAVE-ing to  that  stream  will  put  the whole of your
+program   into SMDD-RAM or LIST with normal line number
+ranges, to  save  a section of your program. If LIST is
+used  it  is advisable to send an EOF  character  (04H)
+before CLOSE-ing  the  stream  so  that LOAD and  MERGE
+can be used.
+
+ LOAD and MERGE
+
+With   a  standard OPEN -  without size or  environment
+options,  then   LOAD  will NEW whatever  was  in  main
+memory,  and  load in  the previously saved  or  listed
+programs.  MERGE will do the same without  erasing  the
+main  memory  first. Error 151 WILL occur if a  LIST-ed
+proram  is    LOAD-ed    or  MERGEd  without  the   EOF
+character.  IT IS NOT FATAL.. the program should  still
+be  intact,  just LIST to the screen to make  sure  (as
+would  be  the   case   is listed to  disk  via  device
+12/13).
+
+ ERROR   NUMERS   (Specific   to SMDD)
+
+192 - Read past End of File.
+
+193  - Insufficient Memory to create object. (Beware  -
+CP/M  needs some RAM to operate [taking an 8K page]- DO
+NOT overfill it.)
+
+197   -   Attempt  to  read  past  High   Level   mark.
+
+198  - Attempt to open 2nd directory with same name  as
+an active one.
+
+Other   error   numbers  may  also occur  whilst  using
+this device.
+
+ HINTS AND TIPS
+
+It   is   possible  to  use  an  abbreviated  form   of
+communication  with   the   device  drivers  by  making
+device  20,  the backup storage device. To do this  ...
+POKE  19,20.  Default values will be used if an  object
+has not already  been  created. The commands SAVE, LOAD
+&  MERGE,  only need a filename, (no need for a  stream
+number i.e.  SAVE "TESTDEV.20". This device can be used
+extremely  simply  or    could  be  developed  into   a
+complicated  filing  system  - with  multiple  pointers
+providing  high   speed database type  facilities.  The
+hardware  and  drivers are  there, it is now up to  you
+and your imagination........
+
+Bill Kennett 0883, Ken Otter 0385
+
